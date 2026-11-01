@@ -19,6 +19,10 @@ interface QualityData {
   points?: number;
   source?: string;
   method?: string;
+  dense_faces?: number;
+  vertices?: number;
+  mean_reprojection_error_px?: number;
+  architectural_features?: string[];
 }
 
 interface ModelViewerProps {
@@ -218,6 +222,24 @@ export const ModelViewer: React.FC<ModelViewerProps> = ({
             </span>
           </div>
         </div>
+
+        {quality?.architectural_features && quality.architectural_features.length > 0 && (
+          <div className="pt-2 border-t border-zinc-800/80">
+            <span className="text-[11px] font-semibold text-zinc-400 block mb-1.5 uppercase tracking-wider">
+              Key Architectural Elements Captured:
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {quality.architectural_features.map((feat: string, idx: number) => (
+                <span
+                  key={idx}
+                  className="px-2 py-0.5 rounded text-[11px] bg-zinc-800/70 border border-zinc-700/60 text-amber-200/90 font-medium"
+                >
+                  ✓ {feat}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         <p className="text-[11px] text-zinc-500 italic">
           * Note: Crowdsourced photogrammetry models are architectural visualizations and are not certified survey-grade engineering scans.
