@@ -16,6 +16,8 @@
 # misc
 .DS_Store
 *.pem
+*.zip
+_old_lifepulse/
 
 # debug
 npm-debug.log*
@@ -50,3 +52,10 @@ shot_*.png
 *_test.png
 test_*.mjs
 test-*.mjs
+
+local_*.png
+render_*.png
+verify_*.mjs
+backend/data/
+spec_details.txt
+BUILD_SPEC.md

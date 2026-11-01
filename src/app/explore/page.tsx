@@ -25,6 +25,7 @@ import {
   Share2,
   Globe,
   Camera,
+  FileText,
   MapPin,
   Maximize2
 } from "lucide-react";
@@ -687,13 +688,19 @@ export default function PlaceExplorerPage() {
               </div>
             </div>
 
-            {/* Top Right Full Twin Engine Shortcut */}
-            <div className="absolute top-4 right-4 z-10">
+            {/* Top Right Direct Links to Digital Archive & Photo-to-3D */}
+            <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
               <Link
-                href={`/twin?site=${encodeURIComponent(activePlace?.name || query)}`}
-                className="px-3.5 py-2 bg-slate-900/90 backdrop-blur-md border border-slate-700 text-heritage-gold hover:text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xl transition-all"
+                href="/archive"
+                className="px-3 py-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-700 text-heritage-gold hover:text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xl transition-all cursor-pointer"
               >
-                <Layers className="w-3.5 h-3.5" /> Full Twin Engine <ExternalLink className="w-3 h-3" />
+                <FileText className="w-3.5 h-3.5" /> Digital Archive
+              </Link>
+              <Link
+                href="/studio"
+                className="px-3 py-1.5 bg-slate-900/90 backdrop-blur-md border border-slate-700 text-emerald-400 hover:text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xl transition-all cursor-pointer"
+              >
+                <Camera className="w-3.5 h-3.5" /> Photo-to-3D
               </Link>
             </div>
 
