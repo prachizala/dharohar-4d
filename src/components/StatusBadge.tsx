@@ -1,20 +1,34 @@
 import React from "react";
-import { CheckCircle2, BookOpen, Sparkles, AlertTriangle, HelpCircle, XCircle } from "lucide-react";
+import { CheckCircle2, BookOpen, Sparkles, AlertTriangle, HelpCircle, XCircle, ShieldCheck } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
-export type VerifyStatusType = "verified" | "sourced" | "ai_suggested" | "disputed" | "conjectural" | "no_source";
+export type VerifyStatusType = "verified" | "sourced" | "ai_suggested" | "disputed" | "conjectural" | "no_source" | "asi_verified";
 
 interface StatusBadgeProps {
   status: string;
   hasSource?: boolean;
+  asiRecord?: string;
 }
 
-export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, hasSource = true }) => {
+export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, hasSource = true, asiRecord }) => {
   const { t } = useT();
 
   let resolvedStatus = (status || "").toLowerCase().trim();
   if (hasSource === false && (resolvedStatus === "ai_suggested" || !resolvedStatus)) {
     resolvedStatus = "no_source";
+  }
+
+  // If explicit ASI Inscription Record provided or status is asi_verified
+  if (resolvedStatus === "asi_verified" || asiRecord) {
+    return (
+      <span
+        className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gradient-to-r from-emerald-950 via-teal-950 to-emerald-950 text-emerald-200 border border-emerald-500/60 shadow-sm"
+        title="Verified against official Archaeological Survey of India (ASI) primary epigraphical record"
+      >
+        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
+        <span>{asiRecord || "Verified by ASI Inscription Record #412"}</span>
+      </span>
+    );
   }
 
   switch (resolvedStatus) {

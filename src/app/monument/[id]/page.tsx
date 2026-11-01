@@ -12,10 +12,11 @@ import {
   Calendar,
   Layers,
   RefreshCw,
-  ExternalLink
+  ExternalLink,
+  Sparkles
 } from "lucide-react";
 import { useT } from "@/lib/i18n";
-import { fetchApi } from "@/lib/api";
+import { fetchApi, getIsOfflineMode, subscribeOfflineMode } from "@/lib/api";
 import { ModelViewer } from "@/components/ModelViewer";
 import { SourcePanel, Claim } from "@/components/SourcePanel";
 import { ResultCard } from "@/components/ResultCard";
@@ -30,6 +31,14 @@ export default function MonumentDetailPage() {
   const [allMonuments, setAllMonuments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"3d" | "photos" | "docs" | "claims">("3d");
+  const [isOffline, setIsOffline] = useState(false);
+
+  useEffect(() => {
+    const unsub = subscribeOfflineMode((offline) => {
+      setIsOffline(offline);
+    });
+    return unsub;
+  }, []);
 
   useEffect(() => {
     fetchApi("/api/v1/monuments")
@@ -48,9 +57,23 @@ export default function MonumentDetailPage() {
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-20 text-center space-y-3">
-        <RefreshCw className="w-8 h-8 animate-spin text-amber-400 mx-auto" />
-        <p className="text-zinc-400 text-sm">Loading monument archive & 3D twin #{id}...</p>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8 animate-pulse">
+        {/* Header Skeleton */}
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-zinc-800">
+          <div className="space-y-2">
+            <div className="h-4 w-48 bg-zinc-800/70 rounded" />
+            <div className="h-8 w-72 bg-gradient-to-r from-zinc-800 via-amber-950/30 to-zinc-800 rounded-lg" />
+            <div className="h-4 w-60 bg-zinc-800/50 rounded" />
+          </div>
+          <div className="h-9 w-40 bg-zinc-800/80 rounded-lg" />
+        </div>
+
+        {/* 3D Canvas Skeleton */}
+        <div className="h-[420px] w-full rounded-2xl border border-amber-900/30 bg-zinc-950/80 relative overflow-hidden flex flex-col items-center justify-center">
+          <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-amber-500/10 to-transparent" />
+          <Box className="w-12 h-12 text-amber-500/30 mb-2 animate-bounce" />
+          <span className="text-xs font-mono text-amber-400/80">Loading photogrammetric mesh & architectural shaders...</span>
+        </div>
       </div>
     );
   }
@@ -84,6 +107,21 @@ export default function MonumentDetailPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+      {/* Offline Showcase Mode Banner */}
+      {isOffline && (
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 rounded-2xl bg-amber-950/40 border border-amber-800/60 text-xs text-amber-200 shadow-md">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-amber-400 shrink-0 animate-pulse" />
+            <span>
+              <strong className="font-semibold text-amber-300">Showing cached showcase assets:</strong> Exploring pre-loaded 3D digital twin and primary source citations for {monument.name_en}.
+            </span>
+          </div>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-900/60 border border-amber-700/60 text-amber-300">
+            Offline Mode
+          </span>
+        </div>
+      )}
+
       {/* Monument Switcher & Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-zinc-800">
         <div className="space-y-1">
