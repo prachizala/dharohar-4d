@@ -17,6 +17,7 @@
 .DS_Store
 *.pem
 *.zip
+_old_lifepulse/
 
 # debug
 npm-debug.log*

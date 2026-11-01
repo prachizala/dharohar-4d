@@ -1,8 +1,9 @@
 import json
 from typing import List, Optional
-from fastapi import APIRouter, HTTPException, Body
+from fastapi import APIRouter, HTTPException, Body, Header
 from pydantic import BaseModel
 
+from backend.app.config import ADMIN_TOKEN
 from backend.app.db import get_db_connection
 
 router = APIRouter(prefix="/api/v1", tags=["3D Models"])
@@ -35,7 +36,9 @@ def get_monument_model(id: int):
     return data
 
 @router.post("/models3d")
-def request_3d_reconstruction(payload: CreateModelJob):
+def request_3d_reconstruction(payload: CreateModelJob, token: Optional[str] = Header(None, alias="X-Admin-Token")):
+    if not token or token != ADMIN_TOKEN:
+        raise HTTPException(status_code=401, detail="Invalid or missing X-Admin-Token")
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT id, name_en FROM monuments WHERE id = ?", (payload.monument_id,))

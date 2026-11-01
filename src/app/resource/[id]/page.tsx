@@ -92,6 +92,7 @@ export default function ResourceDetailPage() {
     try {
       const res = await fetchApi(`/api/v1/resources/${id}/extract-claims`, {
         method: "POST",
+        headers: { "X-Admin-Token": sessionStorage.getItem("dharohar_admin_token") || "" },
       });
       setExtractionResult(res);
       // Refresh resource details to include new claims

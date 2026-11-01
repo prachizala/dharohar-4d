@@ -187,61 +187,64 @@ def seed():
     )
 
     resources_data = [
-        (1, 1, "photo", "Adalaj Stepwell Entrance View", "en", "K. R. Varma", "CC-BY-4.0", "Heritage Volunteers",
+        (1, 1, "photo", "Adalaj Stepwell Entrance View", "en", "Placeholder image (generated for demo)", "CC-BY-4.0", "Heritage Volunteers",
          img1_path, "adalaj_entrance.jpg", img1_sha, img1_phash, "Photograph of Adalaj Stepwell entrance pavilion and columns.",
          "stepwell,gandhinagar,solanki,architecture", "solanki,vav,columns", "High quality photo of entrance pavilion.",
-         "Stone entrance pavilion of Adalaj Stepwell with carved pillars", "published", "verified"),
+         "Stone entrance pavilion of Adalaj Stepwell with carved pillars", "published", "sourced"),
 
-        (2, 1, "photo", "Adalaj Stepwell Column Carvings", "en", "A. S. Patel", "CC0", "Open Archive",
+        (2, 1, "photo", "Adalaj Stepwell Column Carvings", "en", "Placeholder image (generated for demo)", "CC0", "Open Archive",
          img2_path, "adalaj_carving.jpg", img2_sha, img2_phash, "Intricate floral and geometric stone relief on pillars.",
          "carvings,sculpture,relief,stone", "carving,details", "Detailed close-up photo of carved pillar relief.",
          "Detailed sandstone pillar carvings at Adalaj Stepwell", "published", "sourced"),
 
-        (3, 1, "pdf", "ASI Survey Report: Adalaj Stepwell Structure", "en", "Archaeological Survey of India", "CC-BY-SA-4.0", "ASI Research Cell",
+        (3, 1, "pdf", "[Sample] ASI Survey Report: Adalaj Stepwell Structure", "en", "Demo sample (written by project team)", "CC0", "ASI Research Cell",
          doc1_path, "adalaj_asi_survey.pdf", doc1_sha, None, doc1_text,
          "asi,survey,adalaj,history,rudabai", "monograph,rudabai,1498", "Complete architectural study and historical background of Adalaj Vav.",
-         "ASI survey report document for Adalaj Vav", "published", "verified"),
+         "ASI survey report document for Adalaj Vav", "published", "sourced"),
 
-        (4, 2, "photo", "Rani ki Vav Stepped Corridor & Deities", "en", "Patan Documentation Group", "CC-BY-4.0", "Gujarat Heritage Dept",
+        (4, 2, "photo", "Rani ki Vav Stepped Corridor & Deities", "en", "Placeholder image (generated for demo)", "CC-BY-4.0", "Gujarat Heritage Dept",
          img3_path, "rani_vav_apsaras.jpg", img3_sha, img3_phash, "Seven stepped tiers of Rani ki Vav with sculpted niches and Vishnu avatars.",
          "unesco,stepwell,patan,chaulukya,vishnu", "stepwell,unesco,sculpture", "Seven-tiered stepped well featuring ornate relief panels.",
-         "Sculpted stone niches along the tiers of Rani ki Vav", "published", "verified"),
+         "Sculpted stone niches along the tiers of Rani ki Vav", "published", "sourced"),
 
-        (5, 2, "docx", "UNESCO Nomination Dossier: Rani ki Vav", "en", "UNESCO State Party India", "CC0", "UNESCO Repository",
+        (5, 2, "docx", "[Sample] UNESCO Nomination Dossier: Rani ki Vav", "en", "Demo sample (written by project team)", "CC0", "UNESCO Repository",
          doc2_path, "rani_vav_unesco_dossier.docx", doc2_sha, None, doc2_text,
          "unesco,dossier,udayamati,chaulukya,patan", "unesco,1063,udayamati", "Official UNESCO dossier detailing history, significance and conservation of Rani ki Vav.",
-         "UNESCO World Heritage dossier for Rani ki Vav", "published", "verified"),
+         "UNESCO World Heritage dossier for Rani ki Vav", "published", "sourced"),
 
-        (6, 3, "photo", "Surya Kund Stepped Tank at Modhera", "en", "Heritage Photo Club", "CC-BY-4.0", "Sunil Joshi",
+        (6, 3, "photo", "Surya Kund Stepped Tank at Modhera", "en", "Placeholder image (generated for demo)", "CC-BY-4.0", "Sunil Joshi",
          img4_path, "modhera_kund.jpg", img4_sha, img4_phash, "Stepped pyramid water tank Surya Kund facing the assembly hall at Modhera.",
          "modhera,sun-temple,surya-kund,reservoir", "kund,reservoir,stepped-tank", "Surya Kund stepped reservoir with miniature shrines.",
          "Surya Kund reservoir with geometrical stone steps at Modhera", "published", "sourced"),
 
-        (7, 3, "pptx", "Modhera Sun Temple Architectural Analysis", "en", "Dr. H. Trivedi", "CC-BY-SA-4.0", "School of Planning & Architecture",
+        (7, 3, "pptx", "[Sample] Modhera Sun Temple Architectural Analysis", "en", "Demo sample (written by project team)", "CC-BY-SA-4.0", "School of Planning & Architecture",
          doc3_path, "modhera_sun_temple_study.pptx", doc3_sha, None, doc3_text,
          "modhera,solanki,equinox,mandapa,architecture", "presentation,chaulukya,1026", "Slide deck detailing ground plan, equinox alignment and friezes.",
-         "Architectural presentation on Modhera Sun Temple", "published", "verified"),
+         "Architectural presentation on Modhera Sun Temple", "published", "sourced"),
 
-        (8, 4, "photo", "Sidi Saiyyed Mosque Tree of Life Jali", "en", "Ahmedabad City Heritage Trust", "CC0", "Ahmedabad Municipal Corp",
+        (8, 4, "photo", "Sidi Saiyyed Mosque Tree of Life Jali", "en", "Placeholder image (generated for demo)", "CC0", "Ahmedabad Municipal Corp",
          img5_path, "sidi_saiyyed_jali.jpg", img5_sha, img5_phash, "Perforated stone lattice window featuring the famous Tree of Life motif.",
          "jali,sidi-saiyyed,ahmedabad,tree-of-life", "jali,lattice,ahmedabad", "Stone lattice work screen of palm tree and foliage.",
-         "Perforated stone window screen at Sidi Saiyyed Mosque", "published", "verified"),
+         "Perforated stone window screen at Sidi Saiyyed Mosque", "published", "sourced"),
 
-        (9, 4, "report", "Ahmedabad Sultanate Architecture Field Notes", "en", "Bilal Research Group", "CC-BY-4.0", "T. Mansuri",
+        (9, 4, "report", "[Sample] Ahmedabad Sultanate Architecture Field Notes", "en", "Demo sample (written by project team)", "CC-BY-4.0", "T. Mansuri",
          doc4_path, "sidi_saiyyed_jali_notes.txt", doc4_sha, None, doc4_text,
          "sultanate,ahmedabad,sidi-saiyyed,1573", "lattice,sidi-saiyyed", "Field notes and architectural measurements of the Sidi Saiyyed Mosque.",
          "Field notes on Sidi Saiyyed Mosque", "published", "sourced"),
 
-        (10, 5, "pdf", "Sabarmati Ashram Historical Archive", "en", "Sabarmati Ashram Preservation Trust", "CC0", "Ashram Archives",
+        (10, 5, "pdf", "[Sample] Sabarmati Ashram Historical Archive", "en", "Demo sample (written by project team)", "CC0", "Ashram Archives",
          doc5_path, "sabarmati_ashram_history.pdf", doc5_sha, None, doc5_text,
          "gandhi,ashram,sabarmati,dandi-march,freedom", "ashram,1917,dandi", "Historical archive document tracking the foundation and Dandi March departure.",
-         "Historical archive document of Sabarmati Ashram", "published", "verified"),
+         "Historical archive document of Sabarmati Ashram", "published", "sourced"),
 
         (11, 1, "photo", "Draft Aerial View of Adalaj", "en", "Anonymous Contributor", "CC-BY-4.0", "New User",
          img1_path, "draft_adalaj.jpg", img1_sha + "_pending", None, "Unverified user upload awaiting approval.",
          "draft,unreviewed", "pending", "Pending review photo.",
          "Draft unreviewed image", "pending", "ai_suggested"),
     ]
+
+    # Seeded demo resources are never "verified": only a human reviewer may set that.
+    resources_data = [r[:18] + (("sourced" if (r[2] != "photo" and r[17] == "published") else "ai_suggested"),) for r in resources_data]
 
     for r in resources_data:
         cur.execute(
@@ -261,17 +264,17 @@ def seed():
     claims_data = [
         # (id, monument_id, resource_id, type, text, date_certainty, snippet, status, reviewer)
         (1, 1, 3, "builder", "Built in 1498 by Queen Rudabai in memory of Rana Veer Singh.", "exact",
-         "The Adalaj stepwell was built in 1498 by Queen Rudabai in memory of Rana Veer Singh.", "verified", "Admin Reviewer"),
+         "The Adalaj stepwell was built in 1498 by Queen Rudabai in memory of Rana Veer Singh.", "sourced", None),
         (2, 1, 3, "style", "Solanki style subterranean five-storey architecture with elaborate octagonal shafts.", "exact",
-         "features Solanki style subterranean five-storey architecture with elaborate octagonal shafts", "verified", "Admin Reviewer"),
+         "features Solanki style subterranean five-storey architecture with elaborate octagonal shafts", "sourced", None),
         (3, 2, 5, "date", "Commissioned around 1063 CE by Queen Udayamati in memory of King Bhima I.", "circa",
-         "commissioned by Queen Udayamati around 1063 CE in memory of King Bhima I", "verified", "Admin Reviewer"),
+         "commissioned by Queen Udayamati around 1063 CE in memory of King Bhima I", "sourced", None),
         (4, 3, 7, "date", "Built in 1026-27 CE during the reign of Bhima I of the Chaulukya dynasty.", "exact",
-         "Built in 1026-27 CE during the reign of Bhima I of the Chaulukya dynasty", "verified", "Admin Reviewer"),
+         "Built in 1026-27 CE during the reign of Bhima I of the Chaulukya dynasty", "sourced", None),
         (5, 4, 9, "builder", "Built in 1573 CE by Sidi Saiyyed in the retinue of Bilal Jhajar Khan.", "exact",
          "The Sidi Saiyyed Mosque was built in 1573 CE by Sidi Saiyyed in the retinue of Bilal Jhajar Khan", "sourced", None),
         (6, 5, 10, "event", "Served as the launching point for the famous Dandi Salt March on 12 March 1930.", "exact",
-         "launching point for the famous 1930 Dandi Salt March on 12 March 1930", "verified", "Admin Reviewer"),
+         "launching point for the famous 1930 Dandi Salt March on 12 March 1930", "sourced", None),
         # AI Suggested claim without source to demonstrate honest UI badge
         (7, 1, 1, "dimension", "Stepwell reaches approximately 16 meters below ground level.", "range",
          None, "ai_suggested", None),
@@ -290,13 +293,13 @@ def seed():
 
     sources_data = [
         # (id, claim_id, title, author, year, url, locator, tier)
-        (1, 1, "ASI Architectural Monograph No. 44", "Archaeological Survey of India", "1998", "https://asi.nic.in/adalaj", "Page 12, Paragraph 2", 1),
-        (2, 2, "Archaeological Survey of India", "ASI Research Cell", "1998", "https://asi.nic.in/adalaj", "Section 3.1 Architecture", 1),
-        (3, 3, "UNESCO World Heritage Inscription Document 922", "UNESCO World Heritage Centre", "2014", "https://whc.unesco.org/en/list/922", "Criterion (i) and (iv)", 1),
-        (4, 4, "The Architecture of Gujarat: Chaulukya Monuments", "M. A. Dhaky", "1975", "https://ignca.gov.in/chaulukya", "Chapter 4, pp. 88-94", 1),
-        (5, 5, "Epigraphia Indo-Moslemica", "Z. A. Desai", "1954", "https://ignca.gov.in/eim", "Inscription Record 42", 2),
-        (6, 6, "Collected Works of Mahatma Gandhi (CWMG)", "Government of India Publication Division", "1960", "https://gandhiashramsabarmati.org", "Vol. 43, p. 112", 1),
-        (7, 8, "Local Folklore Archive Gandhinagar", "District Heritage Society", "1982", "https://gandhinagar.gujarat.gov.in", "Folio 8", 3),
+        # Tier 2 = Wikipedia. Upgrade to Tier 1 only after a human opens an official source and checks it.
+        (1, 1, "Wikipedia: Adalaj Stepwell", "Wikipedia contributors", "2026", "https://en.wikipedia.org/wiki/Adalaj_Stepwell", "Article lead / History section", 2),
+        (2, 2, "Wikipedia: Adalaj Stepwell", "Wikipedia contributors", "2026", "https://en.wikipedia.org/wiki/Adalaj_Stepwell", "Architecture section", 2),
+        (3, 3, "Wikipedia: Rani ki Vav", "Wikipedia contributors", "2026", "https://en.wikipedia.org/wiki/Rani_ki_vav", "Article lead / History section", 2),
+        (4, 4, "Wikipedia: Sun Temple, Modhera", "Wikipedia contributors", "2026", "https://en.wikipedia.org/wiki/Sun_Temple,_Modhera", "Article lead / History section", 2),
+        (5, 5, "Wikipedia: Sidi Saiyyed Mosque", "Wikipedia contributors", "2026", "https://en.wikipedia.org/wiki/Sidi_Saiyyed_Mosque", "Article lead / History section", 2),
+        (6, 6, "Wikipedia: Sabarmati Ashram", "Wikipedia contributors", "2026", "https://en.wikipedia.org/wiki/Sabarmati_Ashram", "History section", 2),
     ]
 
     cur.executemany(

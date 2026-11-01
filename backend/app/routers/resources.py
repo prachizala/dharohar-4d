@@ -233,31 +233,34 @@ def download_resource(id: int, inline: bool = False):
 def delete_resource(id: int, token: Optional[str] = Header(None, alias="X-Admin-Token")):
     check_admin(token)
     conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT file_path, title, text, tags FROM resources WHERE id = ?", (id,))
-    row = cur.fetchone()
-    if not row:
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT file_path, title, text, tags FROM resources WHERE id = ?", (id,))
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="Resource not found")
+
+        # Delete from FTS5
+        sync_fts_delete(conn, id, row["title"], row["text"], row["tags"])
+
+        # Remove file on disk if exists
+        if row["file_path"]:
+            try:
+                fp = Path(row["file_path"])
+                if fp.exists():
+                    fp.unlink()
+            except Exception:
+                pass
+
+        # Delete referencing claims first to respect foreign keys
+        cur.execute("DELETE FROM claims WHERE resource_id = ?", (id,))
+        cur.execute("DELETE FROM resources WHERE id = ?", (id,))
+        # Also log review action
+        cur.execute("INSERT INTO reviews (target_type, target_id, action, reason, by) VALUES ('resource', ?, 'delete', 'Admin deleted resource', 'Admin')", (id,))
+        conn.commit()
+        return {"success": True, "message": f"Resource {id} deleted successfully"}
+    finally:
         conn.close()
-        raise HTTPException(status_code=404, detail="Resource not found")
-
-    # Delete from FTS5
-    sync_fts_delete(conn, id, row["title"], row["text"], row["tags"])
-
-    # Remove file on disk if exists
-    if row["file_path"]:
-        try:
-            fp = Path(row["file_path"])
-            if fp.exists():
-                fp.unlink()
-        except Exception:
-            pass
-
-    cur.execute("DELETE FROM resources WHERE id = ?", (id,))
-    # Also log review action
-    cur.execute("INSERT INTO reviews (target_type, target_id, action, reason, by) VALUES ('resource', ?, 'delete', 'Admin deleted resource', 'Admin')", (id,))
-    conn.commit()
-    conn.close()
-    return {"success": True, "message": f"Resource {id} deleted successfully"}
 
 @router.get("/{id}/cite")
 def get_citation(id: int):
@@ -276,7 +279,8 @@ def get_citation(id: int):
     return {"id": id, "citation": citation}
 
 @router.post("/{id}/extract-claims")
-def extract_claims_for_resource(id: int):
+def extract_claims_for_resource(id: int, token: Optional[str] = Header(None, alias="X-Admin-Token")):
+    check_admin(token)
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT id, monument_id, title, text FROM resources WHERE id = ?", (id,))

@@ -41,7 +41,7 @@ export default function ReviewPage() {
         setAuthenticated(true);
         sessionStorage.setItem("dharohar_admin_token", authToken);
       } else {
-        alert("Invalid Admin Token. Use 'dharohar-admin-secret-2026'.");
+        alert("Invalid admin token.");
         setAuthenticated(false);
       }
     } catch (err) {
@@ -152,7 +152,7 @@ export default function ReviewPage() {
               type="password"
               value={token}
               onChange={(e) => setToken(e.target.value)}
-              placeholder="Enter ADMIN_TOKEN (e.g. dharohar-admin-secret-2026)"
+              placeholder="Enter ADMIN_TOKEN"
               className="w-full text-xs p-3 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
               required
             />
@@ -168,7 +168,7 @@ export default function ReviewPage() {
           </button>
 
           <p className="text-[11px] text-zinc-500 text-center font-mono">
-            Default demo token: dharohar-admin-secret-2026
+            Enter the ADMIN_TOKEN configured in your backend .env
           </p>
         </form>
       </div>

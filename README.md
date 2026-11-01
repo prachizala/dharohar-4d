@@ -16,5 +16,5 @@ npm run dev
 ```
 
 Visit **http://localhost:3000** for the web application and **http://localhost:8000/docs** for API documentation.
-Review Queue admin secret token: `dharohar-admin-secret-2026`.
+Review Queue: set `ADMIN_TOKEN` in `backend/.env` (copy from `.env.example`) and enter it on `/review`.
 Colab 3D photogrammetry notebook guide: `colab/reconstruct.md`.

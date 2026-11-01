@@ -18,6 +18,7 @@ def create_project_zip():
         ".turbo",
         ".venv",
         "venv",
+        "_old_lifepulse",
     }
     exclude_exts = {
         ".pyc",
@@ -28,7 +29,10 @@ def create_project_zip():
         zip_filename,
         "dharohar-4d.zip",
         ".DS_Store",
-        "thumbs.db"
+        "thumbs.db",
+        ".env",
+        ".env.local",
+        "lifepulse.db",
     }
 
     print(f"Creating project submission zip from: {root_dir}")
@@ -47,6 +51,10 @@ def create_project_zip():
 
             for filename in filenames:
                 if filename in exclude_files:
+                    continue
+                if filename.startswith(".env") and not filename.endswith(".example"):
+                    continue
+                if filename.endswith(".db") and filename != "dharohar.db":
                     continue
                 if any(filename.endswith(ext) for ext in exclude_exts):
                     continue
@@ -87,3 +95,4 @@ def create_project_zip():
 
 if __name__ == "__main__":
     create_project_zip()
+

@@ -82,7 +82,7 @@ def review_resource(id: int, payload: ResourceReviewAction, token: Optional[str]
 
     action = payload.action.lower()
     if action == "approve":
-        cur.execute("UPDATE resources SET publish_status = 'published', verify_status = 'verified' WHERE id = ?", (id,))
+        cur.execute("UPDATE resources SET publish_status = 'published' WHERE id = ?", (id,))
         sync_fts_insert(conn, id, res["title"], res["text"], res["tags"])
     elif action == "reject":
         cur.execute("UPDATE resources SET publish_status = 'rejected' WHERE id = ?", (id,))

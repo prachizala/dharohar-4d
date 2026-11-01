@@ -14,7 +14,7 @@ def get_db_path() -> Path:
 
 def get_db():
     db_path = get_db_path()
-    conn = sqlite3.connect(str(db_path), check_same_thread=False)
+    conn = sqlite3.connect(str(db_path), timeout=30.0, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON;")
     try:
@@ -24,7 +24,7 @@ def get_db():
 
 def get_db_connection() -> sqlite3.Connection:
     db_path = get_db_path()
-    conn = sqlite3.connect(str(db_path), check_same_thread=False)
+    conn = sqlite3.connect(str(db_path), timeout=30.0, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON;")
     return conn
