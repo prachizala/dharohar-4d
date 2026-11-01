@@ -6,16 +6,22 @@ from pathlib import Path
 import imagehash
 from PIL import Image, ImageDraw
 
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+import docx
+from pptx import Presentation
+
 from backend.app.config import DATABASE_URL, UPLOAD_PATH
 from backend.app.db import get_db_connection, init_db, sync_fts_insert
+from backend.app.extract import extract_pdf, extract_docx, extract_pptx
 
 def make_sample_image(filename: str, text: str, color=(70, 130, 180)):
     filepath = UPLOAD_PATH / filename
-    if not filepath.exists():
-        img = Image.new("RGB", (800, 600), color=color)
-        draw = ImageDraw.Draw(img)
-        draw.text((40, 280), text, fill=(255, 255, 255))
-        img.save(filepath, format="JPEG")
+    img = Image.new("RGB", (800, 600), color=color)
+    draw = ImageDraw.Draw(img)
+    draw.text((40, 280), text, fill=(255, 255, 255))
+    img.save(filepath, format="JPEG")
     with open(filepath, "rb") as f:
         data = f.read()
     sha = hashlib.sha256(data).hexdigest()
@@ -25,15 +31,66 @@ def make_sample_image(filename: str, text: str, color=(70, 130, 180)):
         phash = None
     return str(filepath), sha, phash
 
-def make_sample_text_file(filename: str, content: str):
+def make_sample_pdf(filename: str, title: str, paragraphs: list):
     filepath = UPLOAD_PATH / filename
-    if not filepath.exists():
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(content)
+    doc = SimpleDocTemplate(str(filepath), pagesize=letter)
+    styles = getSampleStyleSheet()
+    story = [
+        Paragraph(title, styles["Title"]),
+        Spacer(1, 14)
+    ]
+    for p in paragraphs:
+        story.append(Paragraph(p, styles["Normal"]))
+        story.append(Spacer(1, 10))
+    doc.build(story)
     with open(filepath, "rb") as f:
         data = f.read()
     sha = hashlib.sha256(data).hexdigest()
-    return str(filepath), sha
+    # Extract text using pdfplumber to get exact extracted text
+    extracted = extract_pdf(str(filepath)) or "\n".join(paragraphs)
+    return str(filepath), sha, extracted
+
+def make_sample_docx(filename: str, title: str, paragraphs: list):
+    filepath = UPLOAD_PATH / filename
+    doc = docx.Document()
+    doc.add_heading(title, level=0)
+    for p in paragraphs:
+        doc.add_paragraph(p)
+    doc.save(str(filepath))
+    with open(filepath, "rb") as f:
+        data = f.read()
+    sha = hashlib.sha256(data).hexdigest()
+    extracted = extract_docx(str(filepath)) or "\n".join(paragraphs)
+    return str(filepath), sha, extracted
+
+def make_sample_pptx(filename: str, title: str, slides: list):
+    filepath = UPLOAD_PATH / filename
+    prs = Presentation()
+    title_slide_layout = prs.slide_layouts[0]
+    slide = prs.slides.add_slide(title_slide_layout)
+    slide.shapes.title.text = title
+    slide.placeholders[1].text = "Dharohar 4D Heritage Documentation Series"
+
+    bullet_layout = prs.slide_layouts[1]
+    for heading, text in slides:
+        s = prs.slides.add_slide(bullet_layout)
+        s.shapes.title.text = heading
+        s.placeholders[1].text = text
+    prs.save(str(filepath))
+    with open(filepath, "rb") as f:
+        data = f.read()
+    sha = hashlib.sha256(data).hexdigest()
+    extracted = extract_pptx(str(filepath))
+    return str(filepath), sha, extracted
+
+def make_sample_text_file(filename: str, content: str):
+    filepath = UPLOAD_PATH / filename
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(content)
+    with open(filepath, "rb") as f:
+        data = f.read()
+    sha = hashlib.sha256(data).hexdigest()
+    return str(filepath), sha, content
 
 def seed():
     print("Initializing database...")
@@ -59,7 +116,7 @@ def seed():
     monuments = [
         (1, "Adalaj Stepwell", "अडालज की वाव", "અડાલજની વાવ", "Gandhinagar", "Gujarat", "15th Century (1498 CE)", 23.1667, 72.5801),
         (2, "Rani ki Vav", "रानी की वाव", "રાણીની વાવ", "Patan", "Gujarat", "11th Century (1063 CE)", 23.8589, 72.1017),
-        (3, "Modhera Sun Temple", "मोढेरा सूर्य मंदिर", "મોઢેરા સૂર્ય મંદિર", "Mehsana", "Gujarat", "11th Century (1026 CE)", 23.5835, 72.1330),
+        (3, "Modhera Sun Temple", "मोढेरा सूर्य मंदिर", "મોઢેરા સૂર્ય मंदिर", "Mehsana", "Gujarat", "11th Century (1026 CE)", 23.5835, 72.1330),
         (4, "Sidi Saiyyed Mosque", "सीदी सैयद मस्जिद", "સીદી સૈયદની જાળી", "Ahmedabad", "Gujarat", "16th Century (1573 CE)", 23.0282, 72.5807),
         (5, "Sabarmati Ashram", "साबरमती आश्रम", "સાબરમતી આશ્રમ", "Ahmedabad", "Gujarat", "20th Century (1917 CE)", 23.0605, 72.5808),
     ]
@@ -70,51 +127,64 @@ def seed():
     )
     conn.commit()
 
-    print("Generating sample files and seeding resources...")
-    # Sample files
+    print("Generating genuine binary files (PDFs, DOCX, PPTX) and photos...")
     img1_path, img1_sha, img1_phash = make_sample_image("adalaj_entrance.jpg", "Adalaj Stepwell Main Pavilion View", (180, 120, 70))
     img2_path, img2_sha, img2_phash = make_sample_image("adalaj_carving.jpg", "Adalaj Stepwell Floral Carvings", (140, 100, 60))
     img3_path, img3_sha, img3_phash = make_sample_image("rani_vav_apsaras.jpg", "Rani ki Vav Sculptures & Apsaras", (100, 120, 160))
     img4_path, img4_sha, img4_phash = make_sample_image("modhera_kund.jpg", "Modhera Sun Temple Surya Kund Stepped Tank", (190, 140, 80))
     img5_path, img5_sha, img5_phash = make_sample_image("sidi_saiyyed_jali.jpg", "Tree of Life Stone Lattice Screen", (80, 130, 90))
 
-    doc1_content = (
-        "Archaeological Survey of India Architectural Monograph No. 44.\n"
-        "The Adalaj stepwell was built in 1498 by Queen Rudabai in memory of Rana Veer Singh.\n"
-        "It features Solanki style subterranean five-storey architecture with elaborate octagonal shafts.\n"
-        "Temperature inside the well is about 5 degrees cooler than exterior air."
+    # Real PDF 1: Adalaj Survey
+    doc1_path, doc1_sha, doc1_text = make_sample_pdf(
+        "adalaj_asi_survey.pdf",
+        "Archaeological Survey of India: Adalaj Stepwell Monograph No. 44",
+        [
+            "The Adalaj stepwell was built in 1498 by Queen Rudabai in memory of Rana Veer Singh.",
+            "It features Solanki style subterranean five-storey architecture with elaborate octagonal shafts.",
+            "Temperature inside the well is about 5 degrees cooler than exterior air."
+        ]
     )
-    doc1_path, doc1_sha = make_sample_text_file("adalaj_asi_survey.pdf", doc1_content)
 
-    doc2_content = (
-        "UNESCO World Heritage Documentation Dossier: Rani ki Vav (Queen's Stepwell) at Patan.\n"
-        "Constructed during the rule of the Chaulukya dynasty, located on the banks of Saraswati river.\n"
-        "It was commissioned by Queen Udayamati around 1063 CE in memory of King Bhima I.\n"
-        "Over 500 principal sculptures and over a thousand minor ones adorn the seven stepped levels."
+    # Real DOCX: Rani ki Vav
+    doc2_path, doc2_sha, doc2_text = make_sample_docx(
+        "rani_vav_unesco_dossier.docx",
+        "UNESCO World Heritage Documentation Dossier: Rani ki Vav (Queen's Stepwell) at Patan",
+        [
+            "Constructed during the rule of the Chaulukya dynasty, located on the banks of Saraswati river.",
+            "It was commissioned by Queen Udayamati around 1063 CE in memory of King Bhima I.",
+            "Over 500 principal sculptures and over a thousand minor ones adorn the seven stepped levels."
+        ]
     )
-    doc2_path, doc2_sha = make_sample_text_file("rani_vav_unesco_dossier.docx", doc2_content)
 
-    doc3_content = (
-        "Modhera Sun Temple Architectural Analysis.\n"
-        "Built in 1026-27 CE during the reign of Bhima I of the Chaulukya dynasty.\n"
-        "Comprises three axial components: Gudhamandapa, Sabhamandapa, and the stepped water reservoir Surya Kunda.\n"
-        "Aligned so that the first rays of the equinox sun illuminate the sanctum."
+    # Real PPTX: Modhera Sun Temple
+    doc3_path, doc3_sha, doc3_text = make_sample_pptx(
+        "modhera_sun_temple_study.pptx",
+        "Modhera Sun Temple Architectural Analysis",
+        [
+            ("Historical Context", "Built in 1026-27 CE during the reign of Bhima I of the Chaulukya dynasty."),
+            ("Architectural Complex", "Comprises three axial components: Gudhamandapa, Sabhamandapa, and the stepped water reservoir Surya Kunda."),
+            ("Solar Alignment", "Aligned so that the first rays of the equinox sun illuminate the sanctum.")
+        ]
     )
-    doc3_path, doc3_sha = make_sample_text_file("modhera_sun_temple_study.pptx", doc3_content)
 
-    doc4_content = (
+    # Text report: Sidi Saiyyed Mosque
+    doc4_path, doc4_sha, doc4_text = make_sample_text_file(
+        "sidi_saiyyed_jali_notes.txt",
         "Historical Records of Ahmedabad Sultanate Architecture.\n"
         "The Sidi Saiyyed Mosque was built in 1573 CE by Sidi Saiyyed in the retinue of Bilal Jhajar Khan.\n"
-        "Renowned for the intricately carved ten ten stone lattice windows (jalis) depicting intertwined palm and foliage."
+        "Renowned for the intricately carved ten stone lattice windows (jalis) depicting intertwined palm and foliage."
     )
-    doc4_path, doc4_sha = make_sample_text_file("sidi_saiyyed_jali_notes.txt", doc4_content)
 
-    doc5_content = (
-        "National Gandhi Museum Archive Document.\n"
-        "Sabarmati Ashram was established in 1917 on the banks of Sabarmati river by Mahatma Gandhi.\n"
-        "It served as the launching point for the famous 1930 Dandi Salt March on 12 March 1930."
+    # Real PDF 2: Sabarmati Ashram
+    doc5_path, doc5_sha, doc5_text = make_sample_pdf(
+        "sabarmati_ashram_history.pdf",
+        "National Gandhi Museum Archive: Historical Record of Sabarmati Ashram",
+        [
+            "Sabarmati Ashram was established in 1917 on the banks of Sabarmati river by Mahatma Gandhi.",
+            "It served as the launching point for the famous 1930 Dandi Salt March on 12 March 1930.",
+            "The ashram was initially known as Satyagraha Ashram and reflects simplicity, non-violence, and self-reliance."
+        ]
     )
-    doc5_path, doc5_sha = make_sample_text_file("sabarmati_ashram_history.pdf", doc5_content)
 
     resources_data = [
         (1, 1, "photo", "Adalaj Stepwell Entrance View", "en", "K. R. Varma", "CC-BY-4.0", "Heritage Volunteers",
@@ -128,7 +198,7 @@ def seed():
          "Detailed sandstone pillar carvings at Adalaj Stepwell", "published", "sourced"),
 
         (3, 1, "pdf", "ASI Survey Report: Adalaj Stepwell Structure", "en", "Archaeological Survey of India", "CC-BY-SA-4.0", "ASI Research Cell",
-         doc1_path, "adalaj_asi_survey.pdf", doc1_sha, None, doc1_content,
+         doc1_path, "adalaj_asi_survey.pdf", doc1_sha, None, doc1_text,
          "asi,survey,adalaj,history,rudabai", "monograph,rudabai,1498", "Complete architectural study and historical background of Adalaj Vav.",
          "ASI survey report document for Adalaj Vav", "published", "verified"),
 
@@ -138,7 +208,7 @@ def seed():
          "Sculpted stone niches along the tiers of Rani ki Vav", "published", "verified"),
 
         (5, 2, "docx", "UNESCO Nomination Dossier: Rani ki Vav", "en", "UNESCO State Party India", "CC0", "UNESCO Repository",
-         doc2_path, "rani_vav_unesco_dossier.docx", doc2_sha, None, doc2_content,
+         doc2_path, "rani_vav_unesco_dossier.docx", doc2_sha, None, doc2_text,
          "unesco,dossier,udayamati,chaulukya,patan", "unesco,1063,udayamati", "Official UNESCO dossier detailing history, significance and conservation of Rani ki Vav.",
          "UNESCO World Heritage dossier for Rani ki Vav", "published", "verified"),
 
@@ -148,7 +218,7 @@ def seed():
          "Surya Kund reservoir with geometrical stone steps at Modhera", "published", "sourced"),
 
         (7, 3, "pptx", "Modhera Sun Temple Architectural Analysis", "en", "Dr. H. Trivedi", "CC-BY-SA-4.0", "School of Planning & Architecture",
-         doc3_path, "modhera_sun_temple_study.pptx", doc3_sha, None, doc3_content,
+         doc3_path, "modhera_sun_temple_study.pptx", doc3_sha, None, doc3_text,
          "modhera,solanki,equinox,mandapa,architecture", "presentation,chaulukya,1026", "Slide deck detailing ground plan, equinox alignment and friezes.",
          "Architectural presentation on Modhera Sun Temple", "published", "verified"),
 
@@ -158,12 +228,12 @@ def seed():
          "Perforated stone window screen at Sidi Saiyyed Mosque", "published", "verified"),
 
         (9, 4, "report", "Ahmedabad Sultanate Architecture Field Notes", "en", "Bilal Research Group", "CC-BY-4.0", "T. Mansuri",
-         doc4_path, "sidi_saiyyed_jali_notes.txt", doc4_sha, None, doc4_content,
+         doc4_path, "sidi_saiyyed_jali_notes.txt", doc4_sha, None, doc4_text,
          "sultanate,ahmedabad,sidi-saiyyed,1573", "lattice,sidi-saiyyed", "Field notes and architectural measurements of the Sidi Saiyyed Mosque.",
          "Field notes on Sidi Saiyyed Mosque", "published", "sourced"),
 
         (10, 5, "pdf", "Sabarmati Ashram Historical Archive", "en", "Sabarmati Ashram Preservation Trust", "CC0", "Ashram Archives",
-         doc5_path, "sabarmati_ashram_history.pdf", doc5_sha, None, doc5_content,
+         doc5_path, "sabarmati_ashram_history.pdf", doc5_sha, None, doc5_text,
          "gandhi,ashram,sabarmati,dandi-march,freedom", "ashram,1917,dandi", "Historical archive document tracking the foundation and Dandi March departure.",
          "Historical archive document of Sabarmati Ashram", "published", "verified"),
 
@@ -256,8 +326,7 @@ def seed():
 
     conn.commit()
     conn.close()
-    print("Database seeding completed successfully!")
+    print("Database seeding completed successfully with genuine binary documents!")
 
 if __name__ == "__main__":
     seed()
-

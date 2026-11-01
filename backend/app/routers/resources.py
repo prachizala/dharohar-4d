@@ -193,7 +193,7 @@ def get_resource(id: int):
     return res_dict
 
 @router.get("/{id}/download")
-def download_resource(id: int):
+def download_resource(id: int, inline: bool = False):
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT file_path, original_name, type FROM resources WHERE id = ?", (id,))
@@ -206,10 +206,27 @@ def download_resource(id: int):
     if not fp.exists():
         raise HTTPException(status_code=404, detail="Underlying file on disk not found")
     
+    filename = res["original_name"] or fp.name
+    ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+    media_map = {
+        "pdf": "application/pdf",
+        "jpg": "image/jpeg",
+        "jpeg": "image/jpeg",
+        "png": "image/png",
+        "webp": "image/webp",
+        "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "txt": "text/plain; charset=utf-8"
+    }
+    m_type = media_map.get(ext, "application/octet-stream")
+    # For PDFs and images, allow inline viewing in browser and iframes
+    disp_type = "inline" if (inline or ext in ("pdf", "jpg", "jpeg", "png", "webp", "txt")) else "attachment"
+
     return FileResponse(
         path=str(fp),
-        filename=res["original_name"] or fp.name,
-        media_type="application/octet-stream"
+        filename=filename,
+        media_type=m_type,
+        content_disposition_type=disp_type
     )
 
 @router.delete("/{id}")
