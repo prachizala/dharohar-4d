@@ -143,8 +143,11 @@ export const ModelViewer: React.FC<ModelViewerProps> = ({
               alt={`3D reconstruction of ${monumentName}`}
               camera-controls
               auto-rotate
-              shadow-intensity="1.2"
-              exposure="1.0"
+              camera-orbit="35deg 65deg 20m"
+              min-camera-orbit="auto auto 4m"
+              max-camera-orbit="auto auto 45m"
+              shadow-intensity="1.5"
+              exposure="1.15"
               style={{ width: "100%", height: "100%", outline: "none" }}
               tabIndex={0}
               aria-label={t("screenReaderDesc")}
