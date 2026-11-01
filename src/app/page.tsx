@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, Download, Landmark, FileText, Sparkles, AlertCircle, RefreshCw, Zap } from "lucide-react";
+import { Search, Download, Landmark, FileText, Sparkles, AlertCircle, RefreshCw, Zap, Compass, History } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { Filters } from "@/components/Filters";
 import { ResultCard, SearchItem } from "@/components/ResultCard";
 import { fetchApi, getIsOfflineMode, subscribeOfflineMode } from "@/lib/api";
 import { PageSkeleton, ArchiveGridSkeleton } from "@/components/SkeletonLoader";
+import { IndiaGeoExplorer } from "@/components/IndiaGeoExplorer";
+import { ThenVsNowSlider } from "@/components/ThenVsNowSlider";
 
 function SearchContent() {
   const { t, lang } = useT();
@@ -30,6 +32,7 @@ function SearchContent() {
   const [facets, setFacets] = useState<any>({});
   const [monuments, setMonuments] = useState<any[]>([]);
   const [isOffline, setIsOffline] = useState(false);
+  const [activeView, setActiveView] = useState<"archive" | "map" | "diff">("archive");
 
   // Subscribe to offline / fallback mode state
   useEffect(() => {
@@ -152,6 +155,7 @@ function SearchContent() {
             <button
               key={idx}
               onClick={() => {
+                setActiveView("archive");
                 setInputVal(p.query);
                 const params = new URLSearchParams(searchParams.toString());
                 params.set("q", p.query);
@@ -164,73 +168,119 @@ function SearchContent() {
             </button>
           ))}
         </div>
-      </div>
 
-      {/* Main Content: Filters + Results */}
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
-        {/* Left Filter Sidebar */}
-        <Filters monuments={monuments} facets={facets} />
+        {/* View Mode Switcher: Archive, Geo-Explorer, Then vs. Now */}
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-4 border-t border-zinc-800/80">
+          <button
+            onClick={() => setActiveView("archive")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+              activeView === "archive"
+                ? "bg-amber-500 text-black shadow-lg ring-1 ring-amber-400"
+                : "bg-zinc-900/90 text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-700"
+            }`}
+          >
+            <Search className="w-4 h-4" />
+            <span>Digital Archive ({items.length || total || 7})</span>
+          </button>
 
-        {/* Right Results Grid */}
-        <div className="flex-1 w-full space-y-4">
-          {/* Results Summary & Export Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-zinc-900/40 border border-zinc-800 text-xs text-zinc-400">
-            <div>
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-400" />
-                  Searching archive...
-                </span>
-              ) : (
-                <span>
-                  Showing <strong className="text-zinc-200">{items.length}</strong> of{" "}
-                  <strong className="text-zinc-200">{total}</strong> archival resources
-                  {qParam && <span> for &ldquo;{qParam}&rdquo;</span>}
-                </span>
-              )}
-            </div>
+          <button
+            onClick={() => setActiveView("map")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+              activeView === "map"
+                ? "bg-amber-500 text-black shadow-lg ring-1 ring-amber-400"
+                : "bg-zinc-900/90 text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-700"
+            }`}
+          >
+            <Compass className="w-4 h-4" />
+            <span>India Geo-Explorer</span>
+          </button>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handleExport("csv")}
-                className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-750 text-zinc-300 hover:text-white border border-zinc-700 flex items-center gap-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
-                title="Export filtered records as CSV"
-              >
-                <Download className="w-3.5 h-3.5 text-amber-400" />
-                <span>{t("exportCsv")}</span>
-              </button>
-
-              <button
-                onClick={() => handleExport("json")}
-                className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-750 text-zinc-300 hover:text-white border border-zinc-700 flex items-center gap-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
-                title="Export filtered records as JSON"
-              >
-                <Download className="w-3.5 h-3.5 text-amber-400" />
-                <span>{t("exportJson")}</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Result Cards Grid */}
-          {loading ? (
-            <ArchiveGridSkeleton count={4} />
-          ) : items.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {items.map((item) => (
-                <ResultCard key={item.id} item={item} />
-              ))}
-            </div>
-          ) : (
-            <div className="p-12 text-center rounded-2xl border border-zinc-800 bg-zinc-900/30 space-y-3">
-              <AlertCircle className="w-10 h-10 text-zinc-600 mx-auto" />
-              <h3 className="text-base font-semibold text-zinc-200">{t("noResults")}</h3>
-              <p className="text-xs text-zinc-400 max-w-md mx-auto">
-                No published archival resources matched your search filters. Try clearing some filters or searching for terms like &ldquo;Adalaj&rdquo;, &ldquo;Vav&rdquo;, or &ldquo;Stepwell&rdquo;.
-              </p>
-            </div>
-          )}
+          <button
+            onClick={() => setActiveView("diff")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+              activeView === "diff"
+                ? "bg-amber-500 text-black shadow-lg ring-1 ring-amber-400"
+                : "bg-zinc-900/90 text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-700"
+            }`}
+          >
+            <History className="w-4 h-4" />
+            <span>Historical Time-Slider (Then vs. Now)</span>
+          </button>
         </div>
       </div>
+
+      {/* Render Active View */}
+      {activeView === "map" ? (
+        <IndiaGeoExplorer />
+      ) : activeView === "diff" ? (
+        <ThenVsNowSlider />
+      ) : (
+        /* Main Content: Filters + Results */
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
+          {/* Left Filter Sidebar */}
+          <Filters monuments={monuments} facets={facets} />
+
+          {/* Right Results Grid */}
+          <div className="flex-1 w-full space-y-4">
+            {/* Results Summary & Export Bar */}
+            <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-zinc-900/40 border border-zinc-800 text-xs text-zinc-400">
+              <div>
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-400" />
+                    Searching archive...
+                  </span>
+                ) : (
+                  <span>
+                    Showing <strong className="text-zinc-200">{items.length}</strong> of{" "}
+                    <strong className="text-zinc-200">{total}</strong> archival resources
+                    {qParam && <span> for &ldquo;{qParam}&rdquo;</span>}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleExport("csv")}
+                  className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-750 text-zinc-300 hover:text-white border border-zinc-700 flex items-center gap-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  title="Export filtered records as CSV"
+                >
+                  <Download className="w-3.5 h-3.5 text-amber-400" />
+                  <span>{t("exportCsv")}</span>
+                </button>
+
+                <button
+                  onClick={() => handleExport("json")}
+                  className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-750 text-zinc-300 hover:text-white border border-zinc-700 flex items-center gap-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  title="Export filtered records as JSON"
+                >
+                  <Download className="w-3.5 h-3.5 text-amber-400" />
+                  <span>{t("exportJson")}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Result Cards Grid */}
+            {loading ? (
+              <ArchiveGridSkeleton count={4} />
+            ) : items.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {items.map((item) => (
+                  <ResultCard key={item.id} item={item} />
+                ))}
+              </div>
+            ) : (
+              <div className="p-12 text-center rounded-2xl border border-zinc-800 bg-zinc-900/30 space-y-3">
+                <AlertCircle className="w-10 h-10 text-zinc-600 mx-auto" />
+                <h3 className="text-base font-semibold text-zinc-200">{t("noResults")}</h3>
+                <p className="text-xs text-zinc-400 max-w-md mx-auto">
+                  No published archival resources matched your search filters. Try clearing some filters or searching for terms like &ldquo;Adalaj&rdquo;, &ldquo;Vav&rdquo;, or &ldquo;Stepwell&rdquo;.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
