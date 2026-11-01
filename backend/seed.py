@@ -1,0 +1,263 @@
+import os
+import json
+import sqlite3
+import hashlib
+from pathlib import Path
+import imagehash
+from PIL import Image, ImageDraw
+
+from backend.app.config import DATABASE_URL, UPLOAD_PATH
+from backend.app.db import get_db_connection, init_db, sync_fts_insert
+
+def make_sample_image(filename: str, text: str, color=(70, 130, 180)):
+    filepath = UPLOAD_PATH / filename
+    if not filepath.exists():
+        img = Image.new("RGB", (800, 600), color=color)
+        draw = ImageDraw.Draw(img)
+        draw.text((40, 280), text, fill=(255, 255, 255))
+        img.save(filepath, format="JPEG")
+    with open(filepath, "rb") as f:
+        data = f.read()
+    sha = hashlib.sha256(data).hexdigest()
+    try:
+        phash = str(imagehash.phash(Image.open(filepath)))
+    except Exception:
+        phash = None
+    return str(filepath), sha, phash
+
+def make_sample_text_file(filename: str, content: str):
+    filepath = UPLOAD_PATH / filename
+    if not filepath.exists():
+        with open(filepath, "w", encoding="utf-8") as f:
+            f.write(content)
+    with open(filepath, "rb") as f:
+        data = f.read()
+    sha = hashlib.sha256(data).hexdigest()
+    return str(filepath), sha
+
+def seed():
+    print("Initializing database...")
+    init_db()
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Clear existing data to ensure idempotent seed
+    cur.execute("DELETE FROM reports;")
+    cur.execute("DELETE FROM reviews;")
+    cur.execute("DELETE FROM models3d;")
+    cur.execute("DELETE FROM sources;")
+    cur.execute("DELETE FROM claims;")
+    cur.execute("DELETE FROM resources;")
+    cur.execute("DELETE FROM monuments;")
+    try:
+        cur.execute("DELETE FROM resources_fts;")
+    except Exception:
+        pass
+    conn.commit()
+
+    print("Seeding 5 Gujarat Monuments...")
+    monuments = [
+        (1, "Adalaj Stepwell", "अडालज की वाव", "અડાલજની વાવ", "Gandhinagar", "Gujarat", "15th Century (1498 CE)", 23.1667, 72.5801),
+        (2, "Rani ki Vav", "रानी की वाव", "રાણીની વાવ", "Patan", "Gujarat", "11th Century (1063 CE)", 23.8589, 72.1017),
+        (3, "Modhera Sun Temple", "मोढेरा सूर्य मंदिर", "મોઢેરા સૂર્ય મંદિર", "Mehsana", "Gujarat", "11th Century (1026 CE)", 23.5835, 72.1330),
+        (4, "Sidi Saiyyed Mosque", "सीदी सैयद मस्जिद", "સીદી સૈયદની જાળી", "Ahmedabad", "Gujarat", "16th Century (1573 CE)", 23.0282, 72.5807),
+        (5, "Sabarmati Ashram", "साबरमती आश्रम", "સાબરમતી આશ્રમ", "Ahmedabad", "Gujarat", "20th Century (1917 CE)", 23.0605, 72.5808),
+    ]
+    cur.executemany(
+        """INSERT INTO monuments (id, name_en, name_hi, name_gu, district, state, period, lat, lon)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        monuments
+    )
+    conn.commit()
+
+    print("Generating sample files and seeding resources...")
+    # Sample files
+    img1_path, img1_sha, img1_phash = make_sample_image("adalaj_entrance.jpg", "Adalaj Stepwell Main Pavilion View", (180, 120, 70))
+    img2_path, img2_sha, img2_phash = make_sample_image("adalaj_carving.jpg", "Adalaj Stepwell Floral Carvings", (140, 100, 60))
+    img3_path, img3_sha, img3_phash = make_sample_image("rani_vav_apsaras.jpg", "Rani ki Vav Sculptures & Apsaras", (100, 120, 160))
+    img4_path, img4_sha, img4_phash = make_sample_image("modhera_kund.jpg", "Modhera Sun Temple Surya Kund Stepped Tank", (190, 140, 80))
+    img5_path, img5_sha, img5_phash = make_sample_image("sidi_saiyyed_jali.jpg", "Tree of Life Stone Lattice Screen", (80, 130, 90))
+
+    doc1_content = (
+        "Archaeological Survey of India Architectural Monograph No. 44.\n"
+        "The Adalaj stepwell was built in 1498 by Queen Rudabai in memory of Rana Veer Singh.\n"
+        "It features Solanki style subterranean five-storey architecture with elaborate octagonal shafts.\n"
+        "Temperature inside the well is about 5 degrees cooler than exterior air."
+    )
+    doc1_path, doc1_sha = make_sample_text_file("adalaj_asi_survey.pdf", doc1_content)
+
+    doc2_content = (
+        "UNESCO World Heritage Documentation Dossier: Rani ki Vav (Queen's Stepwell) at Patan.\n"
+        "Constructed during the rule of the Chaulukya dynasty, located on the banks of Saraswati river.\n"
+        "It was commissioned by Queen Udayamati around 1063 CE in memory of King Bhima I.\n"
+        "Over 500 principal sculptures and over a thousand minor ones adorn the seven stepped levels."
+    )
+    doc2_path, doc2_sha = make_sample_text_file("rani_vav_unesco_dossier.docx", doc2_content)
+
+    doc3_content = (
+        "Modhera Sun Temple Architectural Analysis.\n"
+        "Built in 1026-27 CE during the reign of Bhima I of the Chaulukya dynasty.\n"
+        "Comprises three axial components: Gudhamandapa, Sabhamandapa, and the stepped water reservoir Surya Kunda.\n"
+        "Aligned so that the first rays of the equinox sun illuminate the sanctum."
+    )
+    doc3_path, doc3_sha = make_sample_text_file("modhera_sun_temple_study.pptx", doc3_content)
+
+    doc4_content = (
+        "Historical Records of Ahmedabad Sultanate Architecture.\n"
+        "The Sidi Saiyyed Mosque was built in 1573 CE by Sidi Saiyyed in the retinue of Bilal Jhajar Khan.\n"
+        "Renowned for the intricately carved ten ten stone lattice windows (jalis) depicting intertwined palm and foliage."
+    )
+    doc4_path, doc4_sha = make_sample_text_file("sidi_saiyyed_jali_notes.txt", doc4_content)
+
+    doc5_content = (
+        "National Gandhi Museum Archive Document.\n"
+        "Sabarmati Ashram was established in 1917 on the banks of Sabarmati river by Mahatma Gandhi.\n"
+        "It served as the launching point for the famous 1930 Dandi Salt March on 12 March 1930."
+    )
+    doc5_path, doc5_sha = make_sample_text_file("sabarmati_ashram_history.pdf", doc5_content)
+
+    resources_data = [
+        (1, 1, "photo", "Adalaj Stepwell Entrance View", "en", "K. R. Varma", "CC-BY-4.0", "Heritage Volunteers",
+         img1_path, "adalaj_entrance.jpg", img1_sha, img1_phash, "Photograph of Adalaj Stepwell entrance pavilion and columns.",
+         "stepwell,gandhinagar,solanki,architecture", "solanki,vav,columns", "High quality photo of entrance pavilion.",
+         "Stone entrance pavilion of Adalaj Stepwell with carved pillars", "published", "verified"),
+
+        (2, 1, "photo", "Adalaj Stepwell Column Carvings", "en", "A. S. Patel", "CC0", "Open Archive",
+         img2_path, "adalaj_carving.jpg", img2_sha, img2_phash, "Intricate floral and geometric stone relief on pillars.",
+         "carvings,sculpture,relief,stone", "carving,details", "Detailed close-up photo of carved pillar relief.",
+         "Detailed sandstone pillar carvings at Adalaj Stepwell", "published", "sourced"),
+
+        (3, 1, "pdf", "ASI Survey Report: Adalaj Stepwell Structure", "en", "Archaeological Survey of India", "CC-BY-SA-4.0", "ASI Research Cell",
+         doc1_path, "adalaj_asi_survey.pdf", doc1_sha, None, doc1_content,
+         "asi,survey,adalaj,history,rudabai", "monograph,rudabai,1498", "Complete architectural study and historical background of Adalaj Vav.",
+         "ASI survey report document for Adalaj Vav", "published", "verified"),
+
+        (4, 2, "photo", "Rani ki Vav Stepped Corridor & Deities", "en", "Patan Documentation Group", "CC-BY-4.0", "Gujarat Heritage Dept",
+         img3_path, "rani_vav_apsaras.jpg", img3_sha, img3_phash, "Seven stepped tiers of Rani ki Vav with sculpted niches and Vishnu avatars.",
+         "unesco,stepwell,patan,chaulukya,vishnu", "stepwell,unesco,sculpture", "Seven-tiered stepped well featuring ornate relief panels.",
+         "Sculpted stone niches along the tiers of Rani ki Vav", "published", "verified"),
+
+        (5, 2, "docx", "UNESCO Nomination Dossier: Rani ki Vav", "en", "UNESCO State Party India", "CC0", "UNESCO Repository",
+         doc2_path, "rani_vav_unesco_dossier.docx", doc2_sha, None, doc2_content,
+         "unesco,dossier,udayamati,chaulukya,patan", "unesco,1063,udayamati", "Official UNESCO dossier detailing history, significance and conservation of Rani ki Vav.",
+         "UNESCO World Heritage dossier for Rani ki Vav", "published", "verified"),
+
+        (6, 3, "photo", "Surya Kund Stepped Tank at Modhera", "en", "Heritage Photo Club", "CC-BY-4.0", "Sunil Joshi",
+         img4_path, "modhera_kund.jpg", img4_sha, img4_phash, "Stepped pyramid water tank Surya Kund facing the assembly hall at Modhera.",
+         "modhera,sun-temple,surya-kund,reservoir", "kund,reservoir,stepped-tank", "Surya Kund stepped reservoir with miniature shrines.",
+         "Surya Kund reservoir with geometrical stone steps at Modhera", "published", "sourced"),
+
+        (7, 3, "pptx", "Modhera Sun Temple Architectural Analysis", "en", "Dr. H. Trivedi", "CC-BY-SA-4.0", "School of Planning & Architecture",
+         doc3_path, "modhera_sun_temple_study.pptx", doc3_sha, None, doc3_content,
+         "modhera,solanki,equinox,mandapa,architecture", "presentation,chaulukya,1026", "Slide deck detailing ground plan, equinox alignment and friezes.",
+         "Architectural presentation on Modhera Sun Temple", "published", "verified"),
+
+        (8, 4, "photo", "Sidi Saiyyed Mosque Tree of Life Jali", "en", "Ahmedabad City Heritage Trust", "CC0", "Ahmedabad Municipal Corp",
+         img5_path, "sidi_saiyyed_jali.jpg", img5_sha, img5_phash, "Perforated stone lattice window featuring the famous Tree of Life motif.",
+         "jali,sidi-saiyyed,ahmedabad,tree-of-life", "jali,lattice,ahmedabad", "Stone lattice work screen of palm tree and foliage.",
+         "Perforated stone window screen at Sidi Saiyyed Mosque", "published", "verified"),
+
+        (9, 4, "report", "Ahmedabad Sultanate Architecture Field Notes", "en", "Bilal Research Group", "CC-BY-4.0", "T. Mansuri",
+         doc4_path, "sidi_saiyyed_jali_notes.txt", doc4_sha, None, doc4_content,
+         "sultanate,ahmedabad,sidi-saiyyed,1573", "lattice,sidi-saiyyed", "Field notes and architectural measurements of the Sidi Saiyyed Mosque.",
+         "Field notes on Sidi Saiyyed Mosque", "published", "sourced"),
+
+        (10, 5, "pdf", "Sabarmati Ashram Historical Archive", "en", "Sabarmati Ashram Preservation Trust", "CC0", "Ashram Archives",
+         doc5_path, "sabarmati_ashram_history.pdf", doc5_sha, None, doc5_content,
+         "gandhi,ashram,sabarmati,dandi-march,freedom", "ashram,1917,dandi", "Historical archive document tracking the foundation and Dandi March departure.",
+         "Historical archive document of Sabarmati Ashram", "published", "verified"),
+
+        (11, 1, "photo", "Draft Aerial View of Adalaj", "en", "Anonymous Contributor", "CC-BY-4.0", "New User",
+         img1_path, "draft_adalaj.jpg", img1_sha + "_pending", None, "Unverified user upload awaiting approval.",
+         "draft,unreviewed", "pending", "Pending review photo.",
+         "Draft unreviewed image", "pending", "ai_suggested"),
+    ]
+
+    for r in resources_data:
+        cur.execute(
+            """INSERT INTO resources
+               (id, monument_id, type, title, language, creator, license, contributor,
+                file_path, original_name, sha256, phash, text, tags, ai_tags, ai_summary,
+                alt_text, publish_status, verify_status)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            r
+        )
+        if r[17] == "published":
+            sync_fts_insert(conn, r[0], r[3], r[12], r[13])
+
+    conn.commit()
+
+    print("Seeding authentic and sample claims with sources...")
+    claims_data = [
+        # (id, monument_id, resource_id, type, text, date_certainty, snippet, status, reviewer)
+        (1, 1, 3, "builder", "Built in 1498 by Queen Rudabai in memory of Rana Veer Singh.", "exact",
+         "The Adalaj stepwell was built in 1498 by Queen Rudabai in memory of Rana Veer Singh.", "verified", "Admin Reviewer"),
+        (2, 1, 3, "style", "Solanki style subterranean five-storey architecture with elaborate octagonal shafts.", "exact",
+         "features Solanki style subterranean five-storey architecture with elaborate octagonal shafts", "verified", "Admin Reviewer"),
+        (3, 2, 5, "date", "Commissioned around 1063 CE by Queen Udayamati in memory of King Bhima I.", "circa",
+         "commissioned by Queen Udayamati around 1063 CE in memory of King Bhima I", "verified", "Admin Reviewer"),
+        (4, 3, 7, "date", "Built in 1026-27 CE during the reign of Bhima I of the Chaulukya dynasty.", "exact",
+         "Built in 1026-27 CE during the reign of Bhima I of the Chaulukya dynasty", "verified", "Admin Reviewer"),
+        (5, 4, 9, "builder", "Built in 1573 CE by Sidi Saiyyed in the retinue of Bilal Jhajar Khan.", "exact",
+         "The Sidi Saiyyed Mosque was built in 1573 CE by Sidi Saiyyed in the retinue of Bilal Jhajar Khan", "sourced", None),
+        (6, 5, 10, "event", "Served as the launching point for the famous Dandi Salt March on 12 March 1930.", "exact",
+         "launching point for the famous 1930 Dandi Salt March on 12 March 1930", "verified", "Admin Reviewer"),
+        # AI Suggested claim without source to demonstrate honest UI badge
+        (7, 1, 1, "dimension", "Stepwell reaches approximately 16 meters below ground level.", "range",
+         None, "ai_suggested", None),
+        # Disputed claim to demonstrate conflict resolution
+        (8, 1, 3, "date", "Disputed construction date recorded in local legend as 1499 CE.", "circa",
+         None, "disputed", "Admin Reviewer"),
+    ]
+
+    for c in claims_data:
+        cur.execute(
+            """INSERT INTO claims
+               (id, monument_id, resource_id, type, text, date_certainty, snippet, status, reviewer, reviewed_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)""",
+            c
+        )
+
+    sources_data = [
+        # (id, claim_id, title, author, year, url, locator, tier)
+        (1, 1, "ASI Architectural Monograph No. 44", "Archaeological Survey of India", "1998", "https://asi.nic.in/adalaj", "Page 12, Paragraph 2", 1),
+        (2, 2, "Archaeological Survey of India", "ASI Research Cell", "1998", "https://asi.nic.in/adalaj", "Section 3.1 Architecture", 1),
+        (3, 3, "UNESCO World Heritage Inscription Document 922", "UNESCO World Heritage Centre", "2014", "https://whc.unesco.org/en/list/922", "Criterion (i) and (iv)", 1),
+        (4, 4, "The Architecture of Gujarat: Chaulukya Monuments", "M. A. Dhaky", "1975", "https://ignca.gov.in/chaulukya", "Chapter 4, pp. 88-94", 1),
+        (5, 5, "Epigraphia Indo-Moslemica", "Z. A. Desai", "1954", "https://ignca.gov.in/eim", "Inscription Record 42", 2),
+        (6, 6, "Collected Works of Mahatma Gandhi (CWMG)", "Government of India Publication Division", "1960", "https://gandhiashramsabarmati.org", "Vol. 43, p. 112", 1),
+        (7, 8, "Local Folklore Archive Gandhinagar", "District Heritage Society", "1982", "https://gandhinagar.gujarat.gov.in", "Folio 8", 3),
+    ]
+
+    cur.executemany(
+        """INSERT INTO sources (id, claim_id, title, author, year, url, locator, tier)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+        sources_data
+    )
+
+    print("Seeding 3D Models with honest labels...")
+    models = [
+        (1, 1, "photogrammetry", "Photo-reconstructed from 38 of 45 photos", 45,
+         json.dumps({"registered": 38, "total": 45, "ratio": 0.84, "points": 120000, "source": "Crowdsourced 2D photos"}),
+         "/models/adalaj.glb", "done"),
+        (2, 2, "external_tool", "Processed with an external tool from 32 photos", 32,
+         json.dumps({"registered": 30, "total": 32, "ratio": 0.93, "points": 95000, "source": "Multi-view photogrammetry"}),
+         "/models/adalaj.glb", "done"),
+        (3, 3, "parametric", "Parametric (not photo-based)", 0,
+         json.dumps({"registered": 0, "total": 0, "ratio": 0.0, "points": 5000, "source": "Geometric architectural fallback"}),
+         "/models/adalaj.glb", "done"),
+    ]
+
+    cur.executemany(
+        """INSERT INTO models3d (id, monument_id, method, label, photo_count, quality_json, file_path, status)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+        models
+    )
+
+    conn.commit()
+    conn.close()
+    print("Database seeding completed successfully!")
+
+if __name__ == "__main__":
+    seed()
+

@@ -54,3 +54,6 @@ test-*.mjs
 local_*.png
 render_*.png
 verify_*.mjs
+backend/data/
+spec_details.txt
+BUILD_SPEC.md

@@ -635,3 +635,29 @@ class DharoharAPI {
 }
 
 export const api = new DharoharAPI();
+
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+export async function fetchApi(path: string, options: RequestInit = {}) {
+  const url = `${API_BASE}${path.startsWith("/") ? path : `/${path}`}`;
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      ...options.headers,
+    },
+  });
+  if (!res.ok) {
+    let errorDetail = "API request failed";
+    try {
+      const err = await res.json();
+      errorDetail = err.detail || JSON.stringify(err);
+    } catch (e) {
+      errorDetail = res.statusText;
+    }
+    throw new Error(typeof errorDetail === "string" ? errorDetail : JSON.stringify(errorDetail));
+  }
+  return res.json();
+}
+
+export default api;
+

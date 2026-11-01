@@ -406,3 +406,4 @@ def upload_archive_document(
         "message": f"Document '{title}' successfully ingested, indexed, and cataloged into Dharohar 4D Archive.",
         "document": new_doc
     }
+
