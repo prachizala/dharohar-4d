@@ -1,5 +1,11 @@
 // API Client aligned with Dharohar 4D Backend Contracts
-import { getOfflinePlace, getOfflineSuggestions } from './offlineFallback';
+import { 
+  getOfflinePlace, 
+  getOfflineSuggestions, 
+  getOfflineArchiveDocuments, 
+  uploadOfflineArchiveDocument,
+  type ArchiveDocument 
+} from './offlineFallback';
 
 const API_BASE_URL = typeof window !== 'undefined' ? '/api/v1' : (process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8001/api/v1');
 
@@ -562,6 +568,69 @@ class DharoharAPI {
       elevation_m: place.location.elevation_m || 50,
       osm_buildings: []
     };
+  }
+
+  // ---------- CENTRALISED DIGITAL ARCHIVE (PRD GAPS 1, 3, 4) ----------
+  async getArchiveDocuments(params?: {
+    q?: string;
+    monument?: string;
+    category?: string;
+    status?: string;
+    period?: string;
+  }): Promise<{ total: number; results: ArchiveDocument[]; supported_filters: any }> {
+    try {
+      const query = new URLSearchParams();
+      if (params?.q) query.append("q", params.q);
+      if (params?.monument) query.append("monument", params.monument);
+      if (params?.category) query.append("category", params.category);
+      if (params?.status) query.append("status", params.status);
+      if (params?.period) query.append("period", params.period);
+
+      const res = await fetch(`${this.baseURL}/archive/documents?${query.toString()}`);
+      if (res.ok) return await res.json();
+    } catch (e) {
+      // fallback
+    }
+    return getOfflineArchiveDocuments(params);
+  }
+
+  async getArchiveDocument(docId: string): Promise<ArchiveDocument> {
+    try {
+      const res = await fetch(`${this.baseURL}/archive/documents/${encodeURIComponent(docId)}`);
+      if (res.ok) return await res.json();
+    } catch (e) {
+      // fallback
+    }
+    const result = getOfflineArchiveDocuments();
+    const doc = result.results.find(d => d.id === docId);
+    if (doc) return doc;
+    throw new Error("Document not found");
+  }
+
+  async uploadArchiveDocument(formData: FormData): Promise<{ status: string; document: ArchiveDocument }> {
+    try {
+      const res = await fetch(`${this.baseURL}/archive/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      if (res.ok) return await res.json();
+    } catch (e) {
+      // fallback
+    }
+    const title = (formData.get("title") as string) || "Crowdsourced Document";
+    const monument = (formData.get("monument") as string) || "Adalaj Stepwell";
+    const category = (formData.get("category") as any) || "pdf_report";
+    const period_century = (formData.get("period_century") as string) || "15th Century";
+    const description = (formData.get("description") as string) || "Archival field document";
+
+    const doc = uploadOfflineArchiveDocument({
+      title,
+      monument,
+      category,
+      period_century,
+      description
+    });
+    return { status: "success", document: doc };
   }
 }
 

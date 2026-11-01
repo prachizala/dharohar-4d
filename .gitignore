@@ -50,3 +50,7 @@ shot_*.png
 *_test.png
 test_*.mjs
 test-*.mjs
+
+local_*.png
+render_*.png
+verify_*.mjs

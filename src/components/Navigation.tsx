@@ -7,13 +7,14 @@ import { Landmark } from "lucide-react";
 
 const navItems = [
   { href: "/", label: "Home" },
+  { href: "/archive", label: "Archive" },
   { href: "/explore", label: "Place Explorer 4D" },
   { href: "/twin", label: "3D Twin" },
+  { href: "/studio", label: "Studio" },
+  { href: "/monument4d", label: "Monument 4D" },
   { href: "/corridor", label: "Corridor" },
   { href: "/epigrapher", label: "Epigrapher" },
   { href: "/expedition", label: "Expedition" },
-  { href: "/studio", label: "Studio" },
-  { href: "/monument4d", label: "Monument 4D" },
 ];
 
 export default function Navigation() {

@@ -42,6 +42,7 @@ from app.routers.loci import router as loci_router
 from app.routers.studio import router as studio_router
 from app.routers.monument4d import router as monument4d_router
 from app.routers.explore import router as explore_router
+from app.routers.archive import router as archive_router
 
 
 # ── App ───────────────────────────────────────────────────────────────────
@@ -99,6 +100,7 @@ app.include_router(loci_router,       prefix=settings.API_V1_STR)
 app.include_router(studio_router,     prefix=settings.API_V1_STR)
 app.include_router(monument4d_router, prefix=settings.API_V1_STR)
 app.include_router(explore_router,    prefix=settings.API_V1_STR)
+app.include_router(archive_router,    prefix=settings.API_V1_STR)
 
 # ── Register legacy monolith dharohar router (backward compat) ────────────
 app.include_router(dharohar_router,   prefix=settings.API_V1_STR)
