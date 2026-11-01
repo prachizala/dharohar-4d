@@ -80,49 +80,31 @@ const coreSolutions = [
   },
 ];
 
-// Secondary platform features
-const allFeatures = [
+// Core platform modules
+const coreModules = [
+  {
+    icon: FileText,
+    title: "Centralised Digital Archive",
+    description: "Search, upload, and organize historical PDFs, ASI reports, Sanskrit inscriptions, and 3D LiDAR point clouds.",
+    href: "/archive",
+    color: "from-amber-400 to-amber-600",
+    stats: "Unified Document Repository",
+  },
+  {
+    icon: Camera,
+    title: "Photo-to-3D Photogrammetry Studio",
+    description: "Multi-View Stereo pipeline generating 28,000-point dense clouds, camera frustums, and textured meshes from 2D photos.",
+    href: "/studio",
+    color: "from-emerald-400 to-emerald-600",
+    stats: "SfM / MVS Reconstruction",
+  },
   {
     icon: Box,
     title: "Place Explorer 4D",
-    description: "Autonomous research engine with 4D chronological horizon slider and Web Speech narration.",
+    description: "Interactive 4D time travel across historical epochs with verified academic citations and multilingual voice tours.",
     href: "/explore",
-    color: "from-cyan-500 to-blue-600",
-  },
-  {
-    icon: Layers,
-    title: "3D Digital Twin Hub",
-    description: "Interactive Three.js PBR rendering with 8 heritage archetypes and solar azimuth lighting.",
-    href: "/twin",
-    color: "from-heritage-gold to-heritage-bronze",
-  },
-  {
-    icon: Clock,
-    title: "Monument 4D Tracker",
-    description: "Epoch-by-epoch weathering, condition estimation, and salt efflorescence tracking.",
-    href: "/monument4d",
-    color: "from-heritage-sandstone to-heritage-terracotta",
-  },
-  {
-    icon: Route,
-    title: "Heritage Corridor GIS",
-    description: "Interactive GIS explorer for sacred stepwells and monuments across Western India.",
-    href: "/corridor",
-    color: "from-heritage-jade to-heritage-indigo",
-  },
-  {
-    icon: Map,
-    title: "AI Epigrapher",
-    description: "Inscription transcription across Nagari and Persian scripts with IAST and TEI-XML export.",
-    href: "/epigrapher",
-    color: "from-heritage-terracotta to-heritage-sandstone",
-  },
-  {
-    icon: Award,
-    title: "Field Expeditions",
-    description: "NLP journal ingestion with automated GPS route discovery and architectural tagging.",
-    href: "/expedition",
-    color: "from-amber-500 to-orange-600",
+    color: "from-cyan-400 to-blue-600",
+    stats: "4D Chronological Horizons",
   },
 ];
 
@@ -262,35 +244,40 @@ export default function Home() {
       </section>
 
       {/* =========================================================================
-          ALL PLATFORM MODULES GRID
+          THE 3 CORE FUNCTIONAL HUBS
          ========================================================================= */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-10">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-            Integrated Heritage Platform Modules
+            The 3 Core Heritage Engine Hubs
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Seamlessly navigate across 4D time sliders, AI epigraphers, GIS corridors, and condition tracking.
+            Laser-focused architecture delivering the complete end-to-end heritage workflow.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {allFeatures.map((feat) => (
-            <Link key={feat.title} href={feat.href} className="group">
-              <div className="h-full p-5 bg-slate-900/60 border border-slate-800 hover:border-heritage-gold/50 rounded-2xl transition-all duration-300 flex flex-col justify-between group-hover:-translate-y-1">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {coreModules.map((mod) => (
+            <Link key={mod.title} href={mod.href} className="group">
+              <div className="h-full p-6 bg-slate-900/70 border border-slate-800 hover:border-heritage-gold/60 rounded-2xl transition-all duration-300 flex flex-col justify-between group-hover:-translate-y-1 shadow-xl">
                 <div>
-                  <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center mb-3 group-hover:border-heritage-gold/50 transition-colors">
-                    <feat.icon className="w-5 h-5 text-heritage-gold" />
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center group-hover:border-heritage-gold/50 transition-colors">
+                      <mod.icon className="w-6 h-6 text-heritage-gold" />
+                    </div>
+                    <span className="text-[11px] font-mono text-slate-400 bg-slate-950 px-2.5 py-1 rounded-full border border-slate-800">
+                      {mod.stats}
+                    </span>
                   </div>
-                  <h3 className="font-bold text-white text-base mb-1.5 group-hover:text-heritage-gold transition-colors">
-                    {feat.title}
+                  <h3 className="font-bold text-white text-lg mb-2 group-hover:text-heritage-gold transition-colors">
+                    {mod.title}
                   </h3>
                   <p className="text-xs text-slate-400 leading-relaxed">
-                    {feat.description}
+                    {mod.description}
                   </p>
                 </div>
-                <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-500 font-semibold group-hover:text-heritage-gold transition-colors">
-                  <span>Launch Tool</span>
+                <div className="mt-6 pt-3 border-t border-slate-800 flex items-center justify-between text-xs font-bold text-heritage-gold">
+                  <span>Enter Hub</span>
                   <span>→</span>
                 </div>
               </div>
