@@ -424,7 +424,6 @@ export const SHOWCASE_SEARCH_ITEMS = [
     monument_id: 1,
     title: "Sanskrit Foundation Edict Rubbing (VS 1555)",
     type: "pdf",
-    monument_id: 1,
     monument: "Adalaj Stepwell",
     monument_hi: "अडालज की वाव",
     monument_gu: "અડાલજની વાવ",
