@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, Download, Landmark, FileText, Sparkles, AlertCircle, RefreshCw } from "lucide-react";
+import { Search, Download, Landmark, FileText, Sparkles, AlertCircle, RefreshCw, Zap } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { Filters } from "@/components/Filters";
 import { ResultCard, SearchItem } from "@/components/ResultCard";
-import { fetchApi } from "@/lib/api";
+import { fetchApi, getIsOfflineMode, subscribeOfflineMode } from "@/lib/api";
+import { PageSkeleton, ArchiveGridSkeleton } from "@/components/SkeletonLoader";
 
 function SearchContent() {
   const { t, lang } = useT();
@@ -28,6 +29,15 @@ function SearchContent() {
   const [total, setTotal] = useState(0);
   const [facets, setFacets] = useState<any>({});
   const [monuments, setMonuments] = useState<any[]>([]);
+  const [isOffline, setIsOffline] = useState(false);
+
+  // Subscribe to offline / fallback mode state
+  useEffect(() => {
+    const unsub = subscribeOfflineMode((offline) => {
+      setIsOffline(offline);
+    });
+    return unsub;
+  }, []);
 
   // Fetch monuments list for filter dropdown
   useEffect(() => {
@@ -88,6 +98,23 @@ function SearchContent() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      {/* Offline / Cached Showcase Mode Polite Alert */}
+      {isOffline && (
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-amber-950/40 border border-amber-800/60 text-xs text-amber-200/90 shadow-xl backdrop-blur-md">
+          <div className="flex items-center gap-2.5">
+            <span className="p-1 rounded-full bg-amber-500/20 text-amber-400">
+              <Sparkles className="w-4 h-4 animate-pulse" />
+            </span>
+            <span>
+              <strong className="font-semibold text-amber-300">Showing cached showcase assets:</strong> The live backend is starting up or offline. All 3D models, Sanskrit epigraphs, and verified citations are pre-loaded and interactive.
+            </span>
+          </div>
+          <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-semibold uppercase tracking-wider">
+            Offline Archive
+          </span>
+        </div>
+      )}
+
       {/* Hero Section */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
@@ -186,10 +213,7 @@ function SearchContent() {
 
           {/* Result Cards Grid */}
           {loading ? (
-            <div className="p-16 text-center space-y-3">
-              <RefreshCw className="w-8 h-8 animate-spin text-amber-400 mx-auto" />
-              <p className="text-sm text-zinc-400">Searching cross-lingual archive records & verifying snippets...</p>
-            </div>
+            <ArchiveGridSkeleton count={4} />
           ) : items.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {items.map((item) => (
@@ -213,7 +237,7 @@ function SearchContent() {
 
 export default function HomePage() {
   return (
-    <Suspense fallback={<div className="p-12 text-center text-zinc-400">Loading Dharohar 4D...</div>}>
+    <Suspense fallback={<PageSkeleton />}>
       <SearchContent />
     </Suspense>
   );
