@@ -1,6 +1,10 @@
 import sqlite3
 from pathlib import Path
-from backend.app.config import DATABASE_URL
+
+try:
+    from app.config import DATABASE_URL
+except ImportError:
+    from backend.app.config import DATABASE_URL
 
 def get_db_path() -> Path:
     # URL format: sqlite:///./data/dharohar.db

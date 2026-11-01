@@ -20,8 +20,10 @@ services:
         value: 3.11.9
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: PYTHONPATH
+        value: "."
       - key: GROQ_API_KEY
-        sync: false
+        value: ""
       - key: WIKI_USER_AGENT
         value: "Dharohar4D/1.0 (heritage-explorer@dharohar.org)"
       - key: DATABASE_URL

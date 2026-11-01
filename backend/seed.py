@@ -12,9 +12,14 @@ from reportlab.lib.styles import getSampleStyleSheet
 import docx
 from pptx import Presentation
 
-from backend.app.config import DATABASE_URL, UPLOAD_PATH
-from backend.app.db import get_db_connection, init_db, sync_fts_insert
-from backend.app.extract import extract_pdf, extract_docx, extract_pptx
+try:
+    from app.config import DATABASE_URL, UPLOAD_PATH
+    from app.db import get_db_connection, init_db, sync_fts_insert
+    from app.extract import extract_pdf, extract_docx, extract_pptx
+except ImportError:
+    from backend.app.config import DATABASE_URL, UPLOAD_PATH
+    from backend.app.db import get_db_connection, init_db, sync_fts_insert
+    from backend.app.extract import extract_pdf, extract_docx, extract_pptx
 
 def make_sample_image(filename: str, text: str, color=(70, 130, 180)):
     filepath = UPLOAD_PATH / filename

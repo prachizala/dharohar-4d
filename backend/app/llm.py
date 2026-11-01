@@ -1,7 +1,11 @@
 import os
 import json
 from openai import OpenAI
-from backend.app.config import GROQ_API_KEY, LLM_MODEL
+
+try:
+    from app.config import GROQ_API_KEY, LLM_MODEL
+except ImportError:
+    from backend.app.config import GROQ_API_KEY, LLM_MODEL
 
 def _client():
     if not GROQ_API_KEY:

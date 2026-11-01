@@ -2,8 +2,12 @@ from typing import Optional
 from fastapi import APIRouter, Header, HTTPException, Body
 from pydantic import BaseModel
 
-from backend.app.config import ADMIN_TOKEN
-from backend.app.db import get_db_connection, sync_fts_insert, sync_fts_delete
+try:
+    from app.config import ADMIN_TOKEN
+    from app.db import get_db_connection, sync_fts_insert, sync_fts_delete
+except ImportError:
+    from backend.app.config import ADMIN_TOKEN
+    from backend.app.db import get_db_connection, sync_fts_insert, sync_fts_delete
 
 router = APIRouter(prefix="/api/v1/review", tags=["review"])
 

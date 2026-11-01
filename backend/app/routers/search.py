@@ -4,7 +4,10 @@ from typing import Optional
 from fastapi import APIRouter, Query, Response
 from fastapi.responses import StreamingResponse
 
-from backend.app.search import search_resources
+try:
+    from app.search import search_resources
+except ImportError:
+    from backend.app.search import search_resources
 
 router = APIRouter(prefix="/api/v1", tags=["search & export"])
 

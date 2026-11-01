@@ -2,8 +2,12 @@ from typing import Optional, List
 from fastapi import APIRouter, Header, HTTPException, Query
 from pydantic import BaseModel
 
-from backend.app.config import ADMIN_TOKEN
-from backend.app.db import get_db_connection
+try:
+    from app.config import ADMIN_TOKEN
+    from app.db import get_db_connection
+except ImportError:
+    from backend.app.config import ADMIN_TOKEN
+    from backend.app.db import get_db_connection
 
 router = APIRouter(prefix="/api/v1", tags=["claims & reports"])
 

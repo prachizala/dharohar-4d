@@ -1,12 +1,27 @@
 import os
+import sys
 from pathlib import Path
+
+# Ensure backend directory and repo root are in sys.path
+_current_dir = Path(__file__).resolve().parent
+_backend_dir = _current_dir.parent
+_repo_root = _backend_dir.parent
+for _p in [str(_backend_dir), str(_repo_root)]:
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from backend.app.config import UPLOAD_PATH
-from backend.app.db import get_db_connection, init_db
-from backend.app.routers import resources, monuments, claims, review, models3d, search, worker
+try:
+    from app.config import UPLOAD_PATH
+    from app.db import get_db_connection, init_db
+    from app.routers import resources, monuments, claims, review, models3d, search, worker
+except ImportError:
+    from backend.app.config import UPLOAD_PATH
+    from backend.app.db import get_db_connection, init_db
+    from backend.app.routers import resources, monuments, claims, review, models3d, search, worker
 
 app = FastAPI(
     title="Dharohar 4D API",

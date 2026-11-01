@@ -5,8 +5,13 @@ from pathlib import Path
 from typing import Optional
 
 from fastapi import APIRouter, Header, HTTPException, UploadFile, File, Form
-from backend.app.config import WORKER_TOKEN, UPLOAD_PATH
-from backend.app.db import get_db_connection
+
+try:
+    from app.config import WORKER_TOKEN, UPLOAD_PATH
+    from app.db import get_db_connection
+except ImportError:
+    from backend.app.config import WORKER_TOKEN, UPLOAD_PATH
+    from backend.app.db import get_db_connection
 
 router = APIRouter(prefix="/api/v1/worker", tags=["worker"])
 

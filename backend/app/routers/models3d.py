@@ -3,8 +3,12 @@ from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Body, Header
 from pydantic import BaseModel
 
-from backend.app.config import ADMIN_TOKEN
-from backend.app.db import get_db_connection
+try:
+    from app.config import ADMIN_TOKEN
+    from app.db import get_db_connection
+except ImportError:
+    from backend.app.config import ADMIN_TOKEN
+    from backend.app.db import get_db_connection
 
 router = APIRouter(prefix="/api/v1", tags=["3D Models"])
 

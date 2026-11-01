@@ -1,6 +1,10 @@
 import json
 from fastapi import APIRouter, HTTPException
-from backend.app.db import get_db_connection
+
+try:
+    from app.db import get_db_connection
+except ImportError:
+    from backend.app.db import get_db_connection
 
 router = APIRouter(prefix="/api/v1/monuments", tags=["monuments"])
 

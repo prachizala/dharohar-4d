@@ -9,11 +9,18 @@ from fastapi.responses import FileResponse
 import imagehash
 from PIL import Image
 
-from backend.app.config import UPLOAD_PATH, MAX_UPLOAD_MB, ADMIN_TOKEN
-from backend.app.db import get_db_connection, sync_fts_delete, sync_fts_insert
-from backend.app.extract import extract_text_for_file, extract_exif
-from backend.app.llm import suggest_metadata, extract_claims
-from backend.app.verify import filter_claims
+try:
+    from app.config import UPLOAD_PATH, MAX_UPLOAD_MB, ADMIN_TOKEN
+    from app.db import get_db_connection, sync_fts_delete, sync_fts_insert
+    from app.extract import extract_text_for_file, extract_exif
+    from app.llm import suggest_metadata, extract_claims
+    from app.verify import filter_claims
+except ImportError:
+    from backend.app.config import UPLOAD_PATH, MAX_UPLOAD_MB, ADMIN_TOKEN
+    from backend.app.db import get_db_connection, sync_fts_delete, sync_fts_insert
+    from backend.app.extract import extract_text_for_file, extract_exif
+    from backend.app.llm import suggest_metadata, extract_claims
+    from backend.app.verify import filter_claims
 
 router = APIRouter(prefix="/api/v1/resources", tags=["resources"])
 

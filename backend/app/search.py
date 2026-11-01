@@ -1,8 +1,13 @@
 import sqlite3
 from typing import List, Dict, Any, Optional
 from rapidfuzz import fuzz, process
-from backend.app.db import get_db_connection
-from backend.app.llm import translate
+
+try:
+    from app.db import get_db_connection
+    from app.llm import translate
+except ImportError:
+    from backend.app.db import get_db_connection
+    from backend.app.llm import translate
 
 # In-memory translation cache for query expansions
 _TRANSLATION_CACHE: Dict[str, Dict[str, str]] = {}
