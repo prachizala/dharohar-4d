@@ -135,7 +135,7 @@ def create_presentation():
     p.space_before = Pt(12)
 
     p = tf1.add_paragraph()
-    p.text = "Presented by: Prachi Zala & Team  |  Status: 100% Deployed & Live on Render"
+    p.text = "Presented by: Prachi Zala & Yash Patadiya  |  Status: 100% Deployed & Live on Render"
     p.font.size = Pt(13)
     p.font.bold = True
     p.font.color.rgb = EMERALD
