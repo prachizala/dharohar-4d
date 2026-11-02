@@ -119,23 +119,6 @@ function SearchContent() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Offline / Cached Showcase Mode Polite Alert */}
-      {isOffline && (
-        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-amber-950/40 border border-amber-800/60 text-xs text-amber-200/90 shadow-xl backdrop-blur-md">
-          <div className="flex items-center gap-2.5">
-            <span className="p-1 rounded-full bg-amber-500/20 text-amber-400">
-              <Sparkles className="w-4 h-4 animate-pulse" />
-            </span>
-            <span>
-              <strong className="font-semibold text-amber-300">Showing cached showcase assets:</strong> The live backend is starting up or offline. All 3D models, Sanskrit epigraphs, and verified citations are pre-loaded and interactive.
-            </span>
-          </div>
-          <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 font-semibold uppercase tracking-wider">
-            Offline Archive
-          </span>
-        </div>
-      )}
-
       {/* Hero Section */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">

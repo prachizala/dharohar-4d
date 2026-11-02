@@ -107,21 +107,6 @@ export default function MonumentDetailPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-      {/* Offline Showcase Mode Banner */}
-      {isOffline && (
-        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 rounded-2xl bg-amber-950/40 border border-amber-800/60 text-xs text-amber-200 shadow-md">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-400 shrink-0 animate-pulse" />
-            <span>
-              <strong className="font-semibold text-amber-300">Showing cached showcase assets:</strong> Exploring pre-loaded 3D digital twin and primary source citations for {monument.name_en}.
-            </span>
-          </div>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-900/60 border border-amber-700/60 text-amber-300">
-            Offline Mode
-          </span>
-        </div>
-      )}
-
       {/* Monument Switcher & Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-zinc-800">
         <div className="space-y-1">
