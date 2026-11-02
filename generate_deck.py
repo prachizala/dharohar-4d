@@ -135,7 +135,7 @@ def create_presentation():
     p.space_before = Pt(12)
 
     p = tf1.add_paragraph()
-    p.text = "Presented by: Prachi Zala & Yash Patadiya  |  Status: 100% Deployed & Live on Render"
+    p.text = "Presented by: Prachi Zala & Yash Patadiya  |  Live: https://dharohar-4d.onrender.com"
     p.font.size = Pt(13)
     p.font.bold = True
     p.font.color.rgb = EMERALD
@@ -440,7 +440,7 @@ def create_presentation():
     p.space_before = Pt(14)
 
     p = tf10.add_paragraph()
-    p.text = "Ready for Live Demonstration  •  Thank You!"
+    p.text = "Live Web App: https://dharohar-4d.onrender.com  •  Thank You!"
     p.font.size = Pt(16)
     p.font.bold = True
     p.font.color.rgb = EMERALD
