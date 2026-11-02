@@ -42,7 +42,7 @@ export const Navbar: React.FC = () => {
           {/* Navigation Links */}
           <nav aria-label="Main Navigation" className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm">
             <Link
-              href="/"
+              href="/?view=archive"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-zinc-300 hover:text-white hover:bg-zinc-900 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
             >
               <Search className="w-4 h-4 text-amber-400" />

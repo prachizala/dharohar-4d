@@ -32,7 +32,25 @@ function SearchContent() {
   const [facets, setFacets] = useState<any>({});
   const [monuments, setMonuments] = useState<any[]>([]);
   const [isOffline, setIsOffline] = useState(false);
-  const [activeView, setActiveView] = useState<"archive" | "map" | "diff">("archive");
+  const viewParam = (searchParams.get("view") as "archive" | "map" | "diff") || "archive";
+  const [activeView, setActiveView] = useState<"archive" | "map" | "diff">(viewParam);
+
+  // Sync active view whenever URL parameters change
+  useEffect(() => {
+    const v = (searchParams.get("view") as "archive" | "map" | "diff") || "archive";
+    setActiveView(v);
+  }, [searchParams]);
+
+  const handleSwitchView = (v: "archive" | "map" | "diff") => {
+    setActiveView(v);
+    const params = new URLSearchParams(searchParams.toString());
+    if (v === "archive") {
+      params.delete("view");
+    } else {
+      params.set("view", v);
+    }
+    router.push(`/?${params.toString()}`);
+  };
 
   // Subscribe to offline / fallback mode state
   useEffect(() => {
@@ -172,7 +190,7 @@ function SearchContent() {
         {/* View Mode Switcher: Archive, Geo-Explorer, Then vs. Now */}
         <div className="flex flex-wrap items-center justify-center gap-2 pt-4 border-t border-zinc-800/80">
           <button
-            onClick={() => setActiveView("archive")}
+            onClick={() => handleSwitchView("archive")}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
               activeView === "archive"
                 ? "bg-amber-500 text-black shadow-lg ring-1 ring-amber-400"
@@ -184,7 +202,7 @@ function SearchContent() {
           </button>
 
           <button
-            onClick={() => setActiveView("map")}
+            onClick={() => handleSwitchView("map")}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
               activeView === "map"
                 ? "bg-amber-500 text-black shadow-lg ring-1 ring-amber-400"
@@ -196,7 +214,7 @@ function SearchContent() {
           </button>
 
           <button
-            onClick={() => setActiveView("diff")}
+            onClick={() => handleSwitchView("diff")}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
               activeView === "diff"
                 ? "bg-amber-500 text-black shadow-lg ring-1 ring-amber-400"
