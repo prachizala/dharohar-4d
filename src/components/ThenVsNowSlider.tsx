@@ -31,7 +31,7 @@ interface ComparisonItem {
 const COMPARISONS: ComparisonItem[] = [
   {
     id: "adalaj",
-    name: "Adalaj Stepwell (अडालज वाव)",
+    name: "Adalaj Stepwell",
     monumentLocation: "Gandhinagar, Gujarat • Built 1498 CE by Queen Rudadevi",
     thenTitle: "1890 CE Archival Survey Plate • Dr. James Burgess ASI Western Circle",
     thenDate: "1890 CE Archival Plate",
@@ -46,28 +46,28 @@ const COMPARISONS: ComparisonItem[] = [
     description: "Comparison of the subterranean central shaft: 1890 James Burgess survey showing historic sedimentation and moisture erosion vs. modern 2026 restored architecture with active groundwater preservation.",
     differences: [
       {
-        feature: "भूगर्भीय गाद (Silt & Water Table)",
-        then: "निचले तल पर 3.2 मीटर तक गाद (silt) भरी थी, 5वां तल आंशिक रूप से जलमग्न और अगम्य था।",
-        now: "ASI द्वारा गाद हटाकर जल स्तर को नियंत्रित किया गया; सभी 5 तल पर्यटकों व शोधार्थियों हेतु खुले हैं।",
-        significance: "संरचनात्मक स्थिरता एवं भूमिगत जल प्रवाह का पुनरुद्धार"
+        feature: "Subterranean Silt & Water Table",
+        then: "Lower subterranean tier accumulated up to 3.2m of silt; 5th tier was partially submerged and inaccessible.",
+        now: "Silt systematically cleared by ASI conservation; active groundwater monitoring keeps all 5 tiers accessible.",
+        significance: "Structural foundation stabilization & ancient hydrology reactivation."
       },
       {
-        feature: "खंभों की नक्काशी (Pillar Reliefs)",
-        then: "1890 में चूना पत्थर पर काई (lichen) और नमी की परत जमी थी, नक्काशी धुंधली थी।",
-        now: "केमिकल कंज़र्वेशन और 3D लेजर मैपिंग से सूक्ष्म सोलंकी शैली की नक्काशी स्पष्ट संरक्षित है।",
-        significance: "मारू-गुर्जर वास्तुशिल्प का मूल विवरण पुनर्स्थापित"
+        feature: "Pillar Carvings & Relief Detail",
+        then: "Heavy lichen encrustation and moisture damage obscured delicate Solanki relief carvings.",
+        now: "Chemical conservation and 3D LiDAR photogrammetry preserve intricate Maru-Gurjara friezes.",
+        significance: "Restoration of 15th-century sculptural geometry and epigraphs."
       },
       {
-        feature: "अष्टकोणीय शाफ्ट (Octagonal Shaft)",
-        then: "ऊपरी हवा-प्रकाश शाफ्ट में खुली दरारें और क्षरण दर्ज था (Burgess Plate XLIV)।",
-        now: "क्रिप्टोग्राफिक 4D ट्विन में दरारों की माइक्रो-मॉनिटरिंग सक्रिय है, शून्य ढहने का खतरा।",
-        significance: "दीर्घकालिक भूकंपीय सुरक्षा और निरंतर डिजिटल निगरानी"
+        feature: "Octagonal Ventilation Shaft",
+        then: "Open vertical shaft exhibited tension micro-cracks (James Burgess Plate XLIV, 1890).",
+        now: "Continuous 4D digital twin displacement monitoring ensures zero structural collapse risk.",
+        significance: "Long-term seismic assessment & digital conservation baseline."
       }
     ]
   },
   {
     id: "modhera",
-    name: "Sun Temple Modhera (मोढेरा सूर्य मंदिर)",
+    name: "Sun Temple Modhera",
     monumentLocation: "Mehsana, Gujarat • Built 1026 CE by King Bhima I (Solanki Dynasty)",
     thenTitle: "1910 CE Colonial Survey Plate • Sabha Mandapa & Surya Kund",
     thenDate: "1910 CE Survey Plate",
@@ -82,28 +82,28 @@ const COMPARISONS: ComparisonItem[] = [
     description: "Evaluating stone relief weathering across 116 years: 1910 colonial survey documentation of sandstone erosion on the 52 Sabha Mandapa pillars vs. modern equinoctial sanctuary alignment.",
     differences: [
       {
-        feature: "सभा मंडप के 52 स्तंभ (52 Pillars)",
-        then: "1910 में 14 स्तंभों के शीर्ष खंड खंडित थे; मौसम के कारण बलुआ पत्थर का भारी क्षरण था।",
-        now: "ASI ने संरचना को मजबूत किया; 4D सिमुलेशन में प्रत्येक स्तंभ 52 हफ्तों के सौर चक्र को दर्शाता है।",
-        significance: "प्राचीन खगोलीय ज्यामिति का सत्यापन"
+        feature: "Sabha Mandapa 52 Pillars",
+        then: "14 pillar capitols were fractured; intense sandstone weathering caused by centuries of climatic exposure.",
+        now: "ASI structural reinforcement; 4D simulation models the 52 weekly solar astronomical cycles.",
+        significance: "Verification of 11th-century Solanki archaeoastronomical alignment."
       },
       {
-        feature: "सूर्य कुंड (Surya Kund Stepped Tank)",
-        then: "कुंड की कई छोटी सीढ़ीदार देवरियाँ (miniature shrines) जलजमाव और मलबे से ढंकी थीं।",
-        now: "108 लघु मंदिरों का पुनर्निर्माण और जल निकासी प्रणाली सुव्यवस्थित है।",
-        significance: "धार्मिक व वास्तुशिल्प समग्रता की पुनर्स्थापना"
+        feature: "Surya Kund Stepped Reservoir",
+        then: "Miniature stepped shrines were partially buried under alluvial mud and stagnant water.",
+        now: "108 miniature shrines excavated and restored with engineered hydraulic drainage.",
+        significance: "Full architectural restoration of the sacred stepped reservoir."
       },
       {
-        feature: "विषुव संरेखण (Equinox Solar Ray)",
-        then: "केवल लिखित ग्रंथों में दर्ज था कि विषुव के दिन सूर्य की पहली किरण गर्भगृह को आलोकित करती है।",
-        now: "डिजिटल सौर सिमुलेटर (Equinox Azimuth Engine) द्वारा वास्तविक समय में प्रमाणित।",
-        significance: "100% सटीक सौर खगोल विज्ञान पुष्टि"
+        feature: "Equinoctial Solar Beam Alignment",
+        then: "Documented only in historical manuscripts that the equinox sunrise ray lit the sanctum.",
+        now: "Scientifically validated via real-time digital solar azimuth simulation engine.",
+        significance: "100% accurate astronomical confirmation of solar geometry."
       }
     ]
   },
   {
     id: "rani_vav",
-    name: "Rani Ki Vav (रानी की वाव)",
+    name: "Rani Ki Vav",
     monumentLocation: "Patan, Gujarat • UNESCO World Heritage Site • 11th Century CE",
     thenTitle: "1980 Pre-Desiltation Archaeological Survey Record",
     thenDate: "1980 CE Pre-Excavation",
@@ -118,22 +118,22 @@ const COMPARISONS: ComparisonItem[] = [
     description: "Witnessing the transformative excavation of 500+ principal Dashavatara sculptures buried under Saraswati River silt for over 700 years vs. pristine modern digital twin.",
     differences: [
       {
-        feature: "दशावतार मूर्तियाँ (500+ Sculptures)",
-        then: "1980 तक अधिकांश मूर्तियाँ सरस्वती नदी की गाद और बालू में दबी हुई थीं।",
-        now: "ASI उत्खनन के बाद शेषशायी विष्णु और 500+ मुख्य मूर्तियाँ विश्वस्तरीय संरक्षण में प्रदर्शित हैं।",
-        significance: "भारतीय मूर्तिकला का अद्वितीय खजाना सुरक्षित"
+        feature: "500+ Principal Dashavatara Sculptures",
+        then: "Over 70% of sculptures were buried under silt and sand from the Saraswati river.",
+        now: "Masterpieces including Sheshashayi Vishnu fully excavated and under high-grade ASI conservation.",
+        significance: "Recovery of UNESCO World Heritage sculptural masterworks."
       },
       {
-        feature: "7 मंजिला संरचना (7-Tier Architecture)",
-        then: "केवल ऊपरी 2 स्तर दृश्यमान थे; नीचे के 5 स्तर पूरी तरह बालू से पटे पड़े थे।",
-        now: "सातों स्तरों का सफल उत्खनन; 4D डिजिटल ट्वin में प्रत्येक स्तर का विस्तृत 3D डेटा उपलब्ध।",
-        significance: "भूमिगत जल मंदिर की भव्यता का पूर्ण प्रकटीकरण"
+        feature: "7-Tier Inverted Temple Structure",
+        then: "Only the top 2 tiers were visible; bottom 5 tiers were completely submerged in silt.",
+        now: "All 7 subterranean tiers excavated and mapped in high-density 3D photogrammetry.",
+        significance: "Complete revelation of subterranean stepwell monumentality."
       },
       {
-        feature: "यूनेस्को विश्व धरोहर दर्जा",
-        then: "अज्ञात और गैर-संरक्षित क्षेत्रीय खंडहर के रूप में दर्ज था।",
-        now: "2014 में UNESCO World Heritage घोषित; 2026 में पूर्णतः डिजिटाइज़्ड डिजिटल ट्विन।",
-        significance: "वैश्विक पहचान और सर्वोच्च संरक्षण श्रेणी"
+        feature: "UNESCO World Heritage Conservation",
+        then: "Unrecorded regional ruin vulnerable to seasonal flooding and structural degradation.",
+        now: "Inscribed as UNESCO World Heritage Site in 2014; fully preserved as a 4D digital twin.",
+        significance: "Global cultural heritage recognition and permanent digital preservation."
       }
     ]
   }
@@ -171,13 +171,13 @@ export const ThenVsNowSlider: React.FC = () => {
           <div>
             <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
               <History className="w-5 h-5 text-amber-400" />
-              <span>Historical Time-Slider: Then vs. Now (ऐतिहासिक तुलना)</span>
+              <span>Historical Time-Slider: Then vs. Now</span>
               <span className="text-xs font-mono font-normal px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-300">
                 Verified Archival Diff
               </span>
             </h2>
             <p className="text-xs text-zinc-400 mt-0.5">
-              स्लाइडर को आगे-पीछे ड्रैग करके देखें: 19वीं सदी का ऐतिहासिक रिकॉर्ड vs 2026 का आधुनिक 4D डिजिटल ट्विन।
+              Drag the slider to compare 19th-century colonial archaeological plates against modern 2026 4D digital twin reconstructions.
             </p>
           </div>
 
@@ -196,7 +196,7 @@ export const ThenVsNowSlider: React.FC = () => {
                     : "bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800 hover:border-zinc-700"
                 }`}
               >
-                {comp.name.split(" ")[0]}
+                {comp.name}
               </button>
             ))}
           </div>
@@ -229,7 +229,7 @@ export const ThenVsNowSlider: React.FC = () => {
             {/* Label Badge Right (NOW) */}
             <div className="absolute top-4 right-4 z-10 px-3 py-1.5 rounded-xl bg-black/85 border border-emerald-500/80 backdrop-blur-md text-xs font-mono text-emerald-300 shadow-xl flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>अभी (NOW): {activeItem.nowDate}</span>
+              <span>NOW: {activeItem.nowDate}</span>
             </div>
           </div>
 
@@ -251,7 +251,7 @@ export const ThenVsNowSlider: React.FC = () => {
           <div
             className="absolute top-4 left-4 z-10 px-3 py-1.5 rounded-xl bg-black/85 border border-amber-500/80 backdrop-blur-md text-xs font-mono text-amber-300 shadow-xl flex items-center gap-2"
           >
-            <span>📜 पहले (THEN): {activeItem.thenDate}</span>
+            <span>📜 THEN: {activeItem.thenDate}</span>
           </div>
 
           {/* DRAGGABLE DIVIDER LINE & HANDLE */}
@@ -288,13 +288,13 @@ export const ThenVsNowSlider: React.FC = () => {
         </div>
       </div>
 
-      {/* DIFFERENCE BREAKDOWN SECTION (पहले क्या था vs अभी क्या है) */}
+      {/* DIFFERENCE BREAKDOWN SECTION */}
       <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-5 space-y-4 backdrop-blur-md">
         <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
           <div className="flex items-center gap-2">
             <Layers className="w-5 h-5 text-amber-400" />
             <h3 className="text-sm sm:text-base font-bold text-white">
-              ऐतिहासिक बदलाव विश्लेषण (Historical Changes & Architectural Diff)
+              Architectural Transformation & Historical Diff Analysis
             </h3>
           </div>
           <span className="text-xs font-mono text-zinc-400">
@@ -319,7 +319,7 @@ export const ThenVsNowSlider: React.FC = () => {
               {/* THEN */}
               <div className="space-y-1">
                 <div className="text-[10px] font-mono uppercase tracking-wider text-amber-400/90 font-semibold flex items-center gap-1">
-                  <span>📜 पहले (Historical):</span>
+                  <span>📜 THEN (Historical Record):</span>
                 </div>
                 <p className="text-xs text-zinc-300 leading-relaxed bg-zinc-900/70 p-2 rounded-lg border border-zinc-800/60">
                   {diff.then}
@@ -329,7 +329,7 @@ export const ThenVsNowSlider: React.FC = () => {
               {/* NOW */}
               <div className="space-y-1">
                 <div className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-semibold flex items-center gap-1">
-                  <span>🏛️ अभी (2026 Active Twin):</span>
+                  <span>🏛️ NOW (2026 Active Twin):</span>
                 </div>
                 <p className="text-xs text-zinc-300 leading-relaxed bg-zinc-900/70 p-2 rounded-lg border border-zinc-800/60">
                   {diff.now}
@@ -338,7 +338,7 @@ export const ThenVsNowSlider: React.FC = () => {
 
               {/* SIGNIFICANCE */}
               <div className="pt-2 border-t border-zinc-800/60 text-[11px] text-zinc-400 flex items-start gap-1.5">
-                <span className="text-amber-400 font-bold shrink-0">महत्व:</span>
+                <span className="text-amber-400 font-bold shrink-0">Significance:</span>
                 <span>{diff.significance}</span>
               </div>
             </div>
