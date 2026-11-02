@@ -2,11 +2,20 @@
 
 > **Centralised digital archive for Indian cultural heritage resources with verified historical claims, multilingual search, WebXR mobile AR, honest 3D reconstructions, and cryptographic verification certificates.**
 
+[![Live Demo](https://img.shields.io/badge/Render-Live_Production_Demo-00C7B7?style=for-the-badge&logo=render&logoColor=white)](https://dharohar-4d-frontend.onrender.com)
+[![Pitch Deck PDF](https://img.shields.io/badge/Pitch_Deck-10_Slide_PDF-E11D48?style=for-the-badge&logo=adobe-acrobat-reader&logoColor=white)](Dharohar_4D_Presentation.pdf)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Next.js 14](https://img.shields.io/badge/Next.js-14-black.svg)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688.svg)](https://fastapi.tiangolo.com/)
 [![WebXR AR](https://img.shields.io/badge/WebXR-Mobile_AR-FFD700.svg)](https://modelviewer.dev/)
-[![Offline Resilience](https://img.shields.io/badge/Offline_Engine-100%25_Cached_Showcase-emerald.svg)](#)
+
+---
+
+### 🌐 Live Production Deployment
+* **Live Web App:** **[https://dharohar-4d-frontend.onrender.com](https://dharohar-4d-frontend.onrender.com)**  
+* **Pitch Deck (10 Slides PDF):** **[Dharohar_4D_Presentation.pdf](Dharohar_4D_Presentation.pdf)**  
+* **Competition:** Blithchron '27, IIT Gandhinagar (Problem Statement: **HC26-CULT01**)  
+* **Team:** Prachi Zala & Yash Patadiya  
 
 ---
 
