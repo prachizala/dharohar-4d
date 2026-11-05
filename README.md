@@ -14,8 +14,8 @@
 ### 🌐 Live Production Deployment
 * **Live Web App:** **[https://dharohar-4d.onrender.com/](https://dharohar-4d.onrender.com/)**  
 * **Pitch Deck (10 Slides PDF):** **[Dharohar_4D_Presentation.pdf](Dharohar_4D_Presentation.pdf)**  
-* **Competition:** Blithchron '27, IIT Gandhinagar (Problem Statement: **HC26-CULT01**)  
-* **Team:** Prachi Zala & Yash Patadiya  
+* **Competition:** HACKCULT '26, IIT Gandhinagar &times; NxtWave Launchpad Hackathon (Problem Statement: **HC26-CULT01**)  
+* **Team Name:** **Believers** (Team Leader: Prachi Zala)  
 
 ---
 
