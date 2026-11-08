@@ -106,7 +106,7 @@ def create_presentation():
     tf1.word_wrap = True
 
     p = tf1.paragraphs[0]
-    p.text = "BLITHCHRON '27 | IIT GANDHINAGAR • PROBLEM HC26-CULT01"
+    p.text = "HACKCULT '26 | IIT GANDHINAGAR × NXTWAVE • PROBLEM HC26-CULT01"
     p.font.size = Pt(12)
     p.font.bold = True
     p.font.color.rgb = GOLD
@@ -135,7 +135,7 @@ def create_presentation():
     p.space_before = Pt(12)
 
     p = tf1.add_paragraph()
-    p.text = "Presented by: Prachi Zala & Yash Patadiya  |  Live: https://dharohar-4d.onrender.com"
+    p.text = "Team: Believers (Team Leader: Prachi Zala & Yash Patadiya)  |  Live: https://dharohar-4d.onrender.com"
     p.font.size = Pt(13)
     p.font.bold = True
     p.font.color.rgb = EMERALD
